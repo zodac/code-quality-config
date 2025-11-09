@@ -7,23 +7,29 @@
     "customizations": {
         "vscode": {
             "settings": {
+                "editor.detectIndentation": false,
                 "editor.formatOnSave": false, // Only format files with formatters explicitly configured below
                 "editor.insertSpaces": true,
                 "editor.tabSize": 4,
                 "files.autoSave": "onFocusChange",
                 "files.insertFinalNewline": true,
+                "redhat.telemetry.enabled": false,
                 "remote.autoForwardPorts": false,
                 "remote.ignoreLocalPorts": [],
                 "workbench.editor.enablePreview": false,
-                "[dockerfile]": {
-                    "editor.defaultFormatter": "ms-azuretools.vscode-containers",
-                    "editor.formatOnSave": true
-                },
                 "[github-actions-workflow]": {
                     "editor.defaultFormatter": "redhat.vscode-yaml",
                     "editor.formatOnSave": true,
                     "editor.tabSize": 2,
                     "yaml.format.printWidth": 150
+                },
+                "[gitignore]": {
+                    "editor.defaultFormatter": "lkrms.inifmt",
+                    "editor.formatOnSave": true
+                },
+                "[ignore]": {
+                    "editor.defaultFormatter": "lkrms.inifmt",
+                    "editor.formatOnSave": true
                 },
                 "[json]": {
                     "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -40,7 +46,7 @@
                 "[markdown]": {
                     "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
                     "editor.formatOnSave": true,
-                    "markdownlint.configFile": "markdown/.markdownlint.json"
+                    "markdownlint.configFile": "./markdown/.markdownlint.json"
                 },
                 "[shellscript]": {
                     "bashBeautify.tabSize": 4,
@@ -65,6 +71,8 @@
                     "yaml.format.printWidth": 150
                 },
                 "files.associations": {
+                    ".devcontainer/config/.bashrc": "shellscript",
+                    ".devcontainer/config/.bash_completion": "shellscript",
                     "LICENSE": "plaintext",
                     "VERSION": "plaintext"
                 }
@@ -74,7 +82,7 @@
                 "dotjoshjohnson.xml",
                 "esbenp.prettier-vscode",
                 "github.vscode-github-actions",
-                "ms-azuretools.vscode-docker",
+                "lkrms.inifmt",
                 "redhat.vscode-yaml",
                 "shakram02.bash-beautify",
                 "tamasfe.even-better-toml",
@@ -84,11 +92,12 @@
     },
     "forwardPorts": [],
     "mounts": [
-        "source=${localWorkspaceFolder},target=/workspace,type=bind",
+        "source=${localEnv:USERPROFILE}/.bash_history,target=/root/.bash_history,type=bind,consistency=cached",
         "source=${localEnv:USERPROFILE}/.gitconfig,target=/root/.gitconfig,type=bind,consistency=cached",
-        "source=${localEnv:USERPROFILE}/.ssh,target=/root/.ssh,type=bind,consistency=cached"
+        "source=${localEnv:USERPROFILE}/.ssh,target=/root/.ssh,type=bind,consistency=cached",
+        "source=${localWorkspaceFolder},target=/workspace,type=bind"
     ],
-    "postCreateCommand": "chmod 700 /root/.ssh && chmod 600 /root/.ssh/*",
+    "postCreateCommand": "chmod +x .devcontainer/scripts/start.sh && .devcontainer/scripts/start.sh",
     "remoteUser": "root",
     "userEnvProbe": "loginInteractiveShell",
     "workspaceFolder": "/workspace"

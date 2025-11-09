@@ -3,10 +3,7 @@
 # System
 ##########
 
-set +a
-
 # Check for completion files and load into shell session
-
 env_files=(
 	"${HOME}/.bash_completion"
 )
@@ -97,7 +94,6 @@ if [[ -t 1 ]] && [[ -n "${TERM}" ]]; then
 	CYAN=$(tput setaf 6)
 	WHITE=$(tput setaf 7)
 	RESET=$(tput sgr0)
-	export BLACK RED GREEN YELLOW BLUE MAGENTA CYAN WHITE RESET
 fi
 
 # Cyan
@@ -110,7 +106,6 @@ _trace_slim() {
 _trace_slim_f() {
 	printf "${CYAN}%s${RESET}" "$@"
 }
-export -f _trace _trace_slim _trace_slim_f
 
 # Blue
 _debug() {
@@ -122,7 +117,6 @@ _debug_slim() {
 _debug_slim_f() {
 	printf "${BLUE}%s${RESET}" "$@"
 }
-export -f _debug _debug_slim _debug_slim_f
 
 # White
 _info() {
@@ -134,7 +128,6 @@ _info_slim() {
 _info_slim_f() {
 	printf "${WHITE}%s${RESET}" "$@"
 }
-export -f _info _info_slim _info_slim_f
 
 # Green
 _success() {
@@ -146,7 +139,6 @@ _success_slim() {
 _success_slim_f() {
 	printf "${GREEN}%s${RESET}" "$@"
 }
-export -f _success _success_slim _success_slim_f
 
 # Magenta
 _highlight() {
@@ -158,7 +150,6 @@ _highlight_slim() {
 _highlight_slim_f() {
 	printf "${MAGENTA}%s${RESET}" "$@"
 }
-export -f _highlight _highlight_slim _highlight_slim_f
 
 # Yellow
 _warning() {
@@ -170,7 +161,6 @@ _warning_slim() {
 _warning_slim_f() {
 	printf "${YELLOW}%s${RESET}" "$@"
 }
-export -f _warning _warning_slim _warning_slim_f
 
 # Black
 _dark() {
@@ -182,7 +172,6 @@ _dark_slim() {
 _dark_slim_f() {
 	printf "${BLACK}%s${RESET}" "$@"
 }
-export -f _dark _dark_slim _dark_slim_f
 
 # Red
 _error() {
@@ -194,7 +183,6 @@ _error_slim() {
 _error_slim_f() {
 	printf "${RED}%s${RESET}" "$@"
 }
-export -f _error _error_slim _error_slim_f
 
 # Red and kills command
 _fatal() {
@@ -212,7 +200,6 @@ _fatal_slim_f() {
 	kill -SIGINT $$ 2>/dev/null
 	exit 1
 }
-export -f _fatal _fatal_slim _fatal_slim_f
 
 #############################################################################
 
@@ -240,8 +227,11 @@ HISTCONTROL=ignoreboth
 shopt -s histappend
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
-HISTFILESIZE=2000
+export HISTFILE=/root/.bash_history
+export HISTSIZE=10000
+export HISTFILESIZE=20000
+# After each command, write it immediately to the history
+PROMPT_COMMAND="history -a; history -n; ${PROMPT_COMMAND}"
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.

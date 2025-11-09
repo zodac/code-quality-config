@@ -1,32 +1,36 @@
 #!/bin/bash
 _git() {
-	local cur
-
-	COMPREPLY=()
-	cur=${COMP_WORDS[COMP_CWORD]}
-
-	if [ "${COMP_CWORD}" -eq 1 ]; then
-		mapfile -t COMPREPLY < <(compgen -W "\
-            add \
-            branch \
-            checkout \
-            clone \
-            diff \
-            init \
-            log \
-            prune \
-            pull \
-            push \
-            reset \
-            restore \
-            revert \
-            stash \
-            status \
-            tag \
-            version
-        " -- "${cur}")
-	fi
-
-	return 0
-}
-complete -F _git "git"
+    local curr
+    
+    COMPREPLY=()
+    curr=${COMP_WORDS[COMP_CWORD]}
+    
+    local subcommands="\
+    add \
+    branch \
+    checkout \
+    clone \
+    diff \
+    init \
+    log \
+    prune \
+    pull \
+    push \
+    reset \
+    restore \
+    revert \
+    stash \
+    status \
+    tag \
+    version"
+    
+    if [ "${COMP_CWORD}" -eq 1 ]; then
+        # If completiong the first argument, return possible subcommands
+        readarray -t COMPREPLY < <(compgen -W "${subcommands}" -- "${curr}")
+    else
+        # Otherwise use standard completion to allow for filenames
+        readarray -t COMPREPLY < <(compgen -f -- "${curr}")
+    fi
+    
+    return 0
+} && complete -F _git "git"
