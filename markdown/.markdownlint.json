@@ -22,11 +22,7 @@
         "tables": false
     },
     "MD033": {
-        "allowed_elements": [
-            "details",
-            "img",
-            "summary"
-        ]
+        "allowed_elements": ["details", "img", "summary"]
     },
     "MD035": {
         "style": "----"

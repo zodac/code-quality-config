@@ -1,88 +1,70 @@
-#!/bin/bash
-# ------------------------------------------------------------------------------
-# Script Name:     generate_changelog.sh
-#
-# Description:     Generates a categorized changelog from git commit messages
-#                  between a previous tag and the current HEAD. Outputs the
-#                  formatted changelog to the GitHub Actions environment.
-#
-# Usage:           ./generate_changelog.sh [<previous_git_tag>]
-#
-# Requirements:
-#   - git must be installed and in the system PATH
-#   - Executed within a git repository with a valid tag history
-#   - Environment must define GITHUB_ENV (typically provided in GitHub Actions)
-#
-# Behavior:
-#   - Reads all commits between the given tag and HEAD
-#   - Parses commit messages expecting a format like: [category] message
-#   - Categorizes commits by their bracketed prefix (e.g., [ci], [framework])
-#   - Commit messages are linked using the provided repository URL
-#   - Outputs the changelog in a format suitable for use in GitHub Actions via $GITHUB_ENV
-#
-# Exit Codes:
-#   - 0: Success
-#   - Non-zero: Any failure due to missing arguments, git errors, or parsing issues
-# ------------------------------------------------------------------------------
-set -eo pipefail
+#!/bin/sh
+set -eu
 
 GIT_REPO_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
+previous_git_tag="${1:-}"
 
-# Get commit messages with commit hash and raw message separated (falls back to all commits if none is provided)
-previous_git_tag="${1}"
-
-if [[ -z "${previous_git_tag}" ]]; then
-	# No previous tag → get all commits
-	commit_messages=$(git log --pretty=format:"%h%n%B%n---END---")
+# Get commit messages
+if [ -z "${previous_git_tag}" ]; then
+    commit_messages=$(git log --pretty=format:"%h%n%B%n---END---")
 else
-	# Get commits since previous tag
-	commit_messages=$(git log "${previous_git_tag}"..HEAD --pretty=format:"%h%n%B%n---END---")
+    commit_messages=$(git log "${previous_git_tag}"..HEAD --pretty=format:"%h%n%B%n---END---")
 fi
 
-declare -A categories
+# Temporary files
+tmp_commits=$(mktemp)
+tmp_output=$(mktemp)
+echo "${commit_messages}" >"${tmp_commits}"
+
+# Extract commit info and categorize
 commit_hash=""
 commit_message=""
+categories_tmp=$(mktemp)
 
-# Process commits and categorize them
-while IFS= read -r line; do
-	if [[ "$line" == "---END---" ]]; then
-		# Process the full commit message line by line
-		while IFS= read -r msg_line; do
-			if [[ "$msg_line" =~ ^\[([A-Za-z0-9_.-]+)\]\ (.+) ]]; then
-				category="${BASH_REMATCH[1]}"
-				message="${BASH_REMATCH[2]}"
-				categories["${category}"]+="- [[${commit_hash}](${GIT_REPO_URL}/commit/${commit_hash})] ${message}"$'\n'
-			fi
-		done <<<"${commit_message}"
+while IFS= read -r line || [ -n "${line}" ]; do
+    if [ "${line}" = "---END---" ]; then
+        printf "%s\n" "${commit_message}" | while IFS= read -r msg_line || [ -n "${msg_line}" ]; do
+            case "${msg_line}" in
+                \[*\]*)
+                    category=$(printf "%s" "${msg_line}" | sed -n 's/^\[\([A-Za-z0-9_.-]*\)\] .*/\1/p')
+                    message=$(printf "%s" "${msg_line}" | sed -n 's/^\[[^]]*\] \(.*\)/\1/p')
+                    if [ -n "${category}" ]; then
+                        printf "%s|%s|%s\n" "${category}" "${commit_hash}" "${message}" >>"${categories_tmp}"
+                    fi
+                ;;
+            esac
+        done
+        commit_hash=""
+        commit_message=""
+        elif [ -z "${commit_hash}" ]; then
+        commit_hash="${line}"
+    else
+        commit_message="${commit_message}${line}\n"
+    fi
+done <"${tmp_commits}"
 
-		# Reset for next commit
-		commit_hash=""
-		commit_message=""
-	elif [[ -z "${commit_hash}" ]]; then
-		commit_hash="${line}"
-	else
-		commit_message+="${line}"$'\n'
-	fi
-done <<<"${commit_messages}"
+# Sort categories alphabetically
+categories_sorted=$(awk -F'|' '{print $1}' "${categories_tmp}" | sort -u)
 
-# Generate changelog content
-changelog_content=$(mktemp)
-
+# Build changelog
 {
-	# Collect and sort all categories
-	IFS=$'\n' && mapfile -t sorted < <(printf "%s\n" "${!categories[@]}" | sort) && unset IFS
+    for cat in ${categories_sorted}; do
+        echo "**[${cat}]**"
+        awk -F'|' -v cat="${cat}" -v repo="${GIT_REPO_URL}" '
+        $1 == cat {
+            printf "- [[%s](%s/commit/%s)] %s\n", $2, repo, $2, $3
+        }
+        ' "${categories_tmp}"
+        echo ""
+    done
+} >>"${tmp_output}"
 
-	# Print all categories
-	for cat in "${sorted[@]}"; do
-		echo "**[${cat}]**"
-		echo "${categories[$cat]}"
-		echo ""
-	done
-} >>"${changelog_content}"
-
-# Output changelog content
+# Output changelog content for GitHub Actions
 {
-	echo "changelog_content<<EOF"
-	cat "${changelog_content}"
-	echo "EOF"
+    echo "changelog_content<<EOF"
+    cat "$tmp_output"
+    echo "EOF"
 } >>"${GITHUB_ENV}"
+
+# Cleanup
+rm -f "${tmp_commits}" "${categories_tmp}" "${tmp_output}"

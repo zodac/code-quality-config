@@ -1,46 +1,30 @@
-#!/bin/bash
-# ------------------------------------------------------------------------------
-# Script Name:     bump_version.sh
-#
-# Description:     Increments the patch version from a given semantic version,
-#                  updates the `VERSION` file, and stages and optionally commits changes.
-#
-# Usage:           ./bump_version.sh <current_version>
-#
-# Requirements:
-#   - Bash 4+ with support for string manipulation and arrays
-#   - Git repository initialized and containing a `VERSION` file and pom.xml files
-#   - GitHub Actions environment variable `GITHUB_ENV` must be defined for CI integration
-#
-# Behavior:
-#   - Parses the version string (e.g., 1.2.3), increments the patch number
-#   - Writes the new version to the `VERSION` file
-#   - Stages the updated files (`VERSION`)
-#   - Commits the changes if any were made
-#   - Outputs a GitHub Actions environment variable (`has_changes=true`) if changes were committed
-#
-# Exit Codes:
-#   - 0: Success
-#   - Non-zero: Failure due to invalid arguments or command errors
-# ------------------------------------------------------------------------------
-
-set -euo pipefail
+#!/bin/sh
+set -eu
 
 current_version="${1}"
 
-IFS='.' read -r major minor patch <<<"${current_version}"
+# Split version into major, minor, patch
+OLD_IFS="${IFS}"
+IFS=.
+set -- "${current_version}"
+major="${1}"
+minor="${2}"
+patch="${3}"
+IFS="${OLD_IFS}"
+
+# Increment patch
 new_patch=$((patch + 1))
 next_version="${major}.${minor}.${new_patch}"
 
 echo "Bumping version to ${next_version}"
-echo "${next_version}" >VERSION
+echo "${next_version}" > VERSION
 
 # Push changes
-git add -- VERSION
+git add VERSION
 
 if git diff --cached --quiet; then
-	echo "No changes to commit"
+    echo "No changes to commit"
 else
-	git commit -m "[CI] Prepare next version: ${next_version}"
-	echo "has_changes=true" >>"${GITHUB_ENV}"
+    git commit -m "[CI] Prepare next version: ${next_version}"
+    echo "has_changes=true" >> "${GITHUB_ENV}"
 fi

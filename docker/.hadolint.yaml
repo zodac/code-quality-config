@@ -1,17 +1,17 @@
 failure-threshold: warning
 format: json
 ignored:
-    - DL3003
-    - DL3008
-    - DL3018
-    - DL3049
+  - DL3003
+  - DL3008
+  - DL3018
+  - DL3049
 label-schema:
-    author: text
-    contact: email
-    created: rfc3339
-    documentation: url
-    git-revision: hash
-    license: spdx
-    version: semver
+  author: text
+  contact: email
+  created: rfc3339
+  documentation: url
+  git-revision: hash
+  license: spdx
+  version: semver
 no-fail: true
 strict-labels: false

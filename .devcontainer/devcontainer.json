@@ -17,6 +17,10 @@
                 "remote.autoForwardPorts": false,
                 "remote.ignoreLocalPorts": [],
                 "workbench.editor.enablePreview": false,
+                "[dockerfile]": {
+                    "editor.defaultFormatter": "ms-azuretools.vscode-containers",
+                    "editor.formatOnSave": true
+                },
                 "[github-actions-workflow]": {
                     "editor.defaultFormatter": "redhat.vscode-yaml",
                     "editor.formatOnSave": true,
@@ -73,6 +77,7 @@
                 "files.associations": {
                     ".devcontainer/config/.bashrc": "shellscript",
                     ".devcontainer/config/.bash_completion": "shellscript",
+                    "**/java/license-header-definition.txt": "xml",
                     "LICENSE": "plaintext",
                     "VERSION": "plaintext"
                 }
@@ -83,6 +88,7 @@
                 "esbenp.prettier-vscode",
                 "github.vscode-github-actions",
                 "lkrms.inifmt",
+                "ms-azuretools.vscode-docker",
                 "redhat.vscode-yaml",
                 "shakram02.bash-beautify",
                 "tamasfe.even-better-toml",
