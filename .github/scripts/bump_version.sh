@@ -6,7 +6,8 @@ current_version="${1}"
 # Split version into major, minor, patch
 OLD_IFS="${IFS}"
 IFS=.
-set -- "${current_version}"
+# shellcheck disable=SC2086
+set -- ${current_version}
 major="${1}"
 minor="${2}"
 patch="${3}"
