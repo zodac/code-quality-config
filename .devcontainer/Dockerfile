@@ -1,8 +1,8 @@
 FROM debian:13.1
+WORKDIR /workspace
 
 # Install development packages
-RUN apt-get update && \
-    apt-get install -yqq --no-install-recommends \
+RUN apt-get update && apt-get install -yqq --no-install-recommends \
     curl \
     git \
     iputils-ping \
@@ -18,5 +18,4 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*    
 
 # Copy bash profile files to the environment
-COPY ./.devcontainer/config/.bashrc /root/.bashrc
-COPY ./.devcontainer/config/.bash_completion /root/.bash_completion
+COPY ./.devcontainer/config/.bashrc ./.devcontainer/config/.bash_completion /root/

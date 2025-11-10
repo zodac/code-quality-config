@@ -16,6 +16,7 @@
                 "redhat.telemetry.enabled": false,
                 "remote.autoForwardPorts": false,
                 "remote.ignoreLocalPorts": [],
+                "terminal.integrated.defaultProfile.linux": "bash",
                 "workbench.editor.enablePreview": false,
                 "[dockerfile]": {
                     "editor.defaultFormatter": "ms-azuretools.vscode-containers",
@@ -64,15 +65,23 @@
                     "evenBetterToml.formatter.columnWidth": 150
                 },
                 "[xml]": {
-                    "editor.defaultFormatter": "DotJoshJohnson.xml",
+                    "editor.defaultFormatter": "redhat.vscode-xml",
                     "editor.formatOnSave": true,
-                    "yaml.format.printWidth": 150
+                    "xml.format.closingBracketNewLine": false,
+                    "xml.format.enforceQuoteStyle": "preferred",
+                    "xml.format.maxLineWidth": 150,
+                    "xml.format.spaceBeforeEmptyCloseTag": true,
+                    "xml.format.splitAttributes": "alignWithFirstAttr",
+                    "xml.format.splitAttributesIndentSize": 4,
+                    "xml.format.xsiSchemaLocationSplit": "onPair",
+                    "xml.preferences.quoteStyle": "double"
                 },
                 "[yaml]": {
                     "editor.defaultFormatter": "redhat.vscode-yaml",
                     "editor.formatOnSave": true,
                     "editor.tabSize": 2,
-                    "yaml.format.printWidth": 150
+                    "yaml.format.printWidth": 150,
+                    "yaml.validate": false
                 },
                 "files.associations": {
                     ".devcontainer/config/.bashrc": "shellscript",
@@ -84,12 +93,12 @@
             },
             "extensions": [
                 "davidanson.vscode-markdownlint",
-                "dotjoshjohnson.xml",
                 "esbenp.prettier-vscode",
                 "github.vscode-github-actions",
                 "lkrms.inifmt",
                 "ms-azuretools.vscode-docker",
                 "redhat.vscode-yaml",
+                "redhat.vscode-xml",
                 "shakram02.bash-beautify",
                 "tamasfe.even-better-toml",
                 "timonwong.shellcheck"

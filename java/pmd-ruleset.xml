@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ruleset name="zodac's Ruleset"
-    xmlns="http://pmd.sourceforge.net/ruleset/3.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/3.0.0 http://pmd.sourceforge.net/ruleset_3_0_0.xsd">
+         xmlns="http://pmd.sourceforge.net/ruleset/3.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/3.0.0 http://pmd.sourceforge.net/ruleset_3_0_0.xsd">
 
     <description>
         Custom ruleset defined for Java projects. Based on:
@@ -10,98 +11,112 @@
 
     <rule ref="category/java/bestpractices.xml">
         <!-- Don't think a rule is necessary, should take it on a case-by-case basis to use a Supplier -->
-        <exclude name="GuardLogStatement"/>
+        <exclude name="GuardLogStatement" />
         <!-- False positives with other assertion libraries -->
-        <exclude name="UnitTestShouldIncludeAssert"/>
+        <exclude name="UnitTestShouldIncludeAssert" />
         <!-- I have no problem with multiple asserts in my tests -->
-        <exclude name="UnitTestContainsTooManyAsserts"/>
+        <exclude name="UnitTestContainsTooManyAsserts" />
         <!-- I think explicit 2D arrays looks clearer -->
-        <exclude name="UseVarargs"/>
+        <exclude name="UseVarargs" />
     </rule>
     <!-- When using an indexed FOR loop, certain scenarios exist where I'd like to skip the increment -->
     <rule ref="category/java/bestpractices.xml/AvoidReassigningLoopVariables">
         <properties>
-            <property name="foreachReassign" value="deny"/>
-            <property name="forReassign" value="skip"/>
+            <property name="foreachReassign"
+                      value="deny" />
+            <property name="forReassign"
+                      value="skip" />
         </properties>
     </rule>
 
     <rule ref="category/java/codestyle.xml">
         <!-- Public constructors are fine in many cases -->
-        <exclude name="AtLeastOneConstructor"/>
+        <exclude name="AtLeastOneConstructor" />
         <!-- Unnecessary -->
-        <exclude name="CommentDefaultAccessModifier"/>
+        <exclude name="CommentDefaultAccessModifier" />
         <!-- Some false positives where we want the default implementation to be empty -->
-        <exclude name="EmptyMethodInAbstractClassShouldBeAbstract"/>
+        <exclude name="EmptyMethodInAbstractClassShouldBeAbstract" />
         <!-- Plenty of scenarios where we would like to exit a method early in error cases -->
-        <exclude name="OnlyOneReturn"/>
+        <exclude name="OnlyOneReturn" />
         <!-- False positives in test code, see https://github.com/pmd/pmd/issues/4712 -->
-        <exclude name="UnnecessaryImport"/>
+        <exclude name="UnnecessaryImport" />
         <!-- I prefer to be explicit in TRY-WITH-RESOURCES blocks -->
         <!-- Would be nice to keep the check for other cases (interfaces/annotations), but not possible -->
         <!-- Caught by SonarQube analysis -->
-        <exclude name="UnnecessaryModifier"/>
+        <exclude name="UnnecessaryModifier" />
         <!-- I'm happy to use 'var', no need to forbid it -->
-        <exclude name="UseExplicitTypes"/>
+        <exclude name="UseExplicitTypes" />
 
         <!-- Issues for a style guide -->
-        <exclude name="ClassNamingConventions"/>
-        <exclude name="LongVariable"/>
-        <exclude name="ShortClassName"/>
-        <exclude name="ShortMethodName"/>
-        <exclude name="ShortVariable"/>
-        <exclude name="TooManyStaticImports"/>
-        <exclude name="UselessParentheses"/>
+        <exclude name="ClassNamingConventions" />
+        <exclude name="LongVariable" />
+        <exclude name="ShortClassName" />
+        <exclude name="ShortMethodName" />
+        <exclude name="ShortVariable" />
+        <exclude name="TooManyStaticImports" />
+        <exclude name="UselessParentheses" />
     </rule>
     <!-- I don't want to stick to the convention for unit tests, reasonable for production methods though -->
     <rule ref="category/java/codestyle.xml/MethodNamingConventions">
         <properties>
-            <property name="methodPattern" value="[a-z][a-zA-Z0-9]*"/>
-            <property name="staticPattern" value="[a-z][a-zA-Z0-9]*"/>
-            <property name="nativePattern" value="[a-z][a-zA-Z0-9]*"/>
-            <property name="junit3TestPattern" value=".*"/>
-            <property name="junit4TestPattern" value=".*"/>
-            <property name="junit5TestPattern" value=".*"/>
+            <property name="methodPattern"
+                      value="[a-z][a-zA-Z0-9]*" />
+            <property name="staticPattern"
+                      value="[a-z][a-zA-Z0-9]*" />
+            <property name="nativePattern"
+                      value="[a-z][a-zA-Z0-9]*" />
+            <property name="junit3TestPattern"
+                      value=".*" />
+            <property name="junit4TestPattern"
+                      value=".*" />
+            <property name="junit5TestPattern"
+                      value=".*" />
         </properties>
     </rule>
 
     <rule ref="category/java/design.xml">
         <!-- Disagree, useful to explicitly catch generic Exceptions in some scenarios -->
-        <exclude name="AvoidCatchingGenericException"/>
+        <exclude name="AvoidCatchingGenericException" />
         <!-- A little hit & miss -->
-        <exclude name="GodClass"/>
+        <exclude name="GodClass" />
         <!-- I like chaining methods -->
-        <exclude name="LawOfDemeter"/>
+        <exclude name="LawOfDemeter" />
         <!-- Not necessary -->
-        <exclude name="LoosePackageCoupling"/>
+        <exclude name="LoosePackageCoupling" />
 
         <!-- Issues for a style guide -->
-        <exclude name="CouplingBetweenObjects"/>
-        <exclude name="ExcessiveImports"/>
-        <exclude name="ExcessiveParameterList"/>
-        <exclude name="TooManyMethods"/>
-        <exclude name="UseObjectForClearerAPI"/>
-        <exclude name="ExcessivePublicCount"/>
+        <exclude name="CouplingBetweenObjects" />
+        <exclude name="ExcessiveImports" />
+        <exclude name="ExcessiveParameterList" />
+        <exclude name="TooManyMethods" />
+        <exclude name="UseObjectForClearerAPI" />
+        <exclude name="ExcessivePublicCount" />
     </rule>
     <!-- Default threshold is a bit high for some of our validation flows -->
     <rule ref="category/java/design.xml/CognitiveComplexity">
         <properties>
-            <property name="reportLevel" value="25"/>
+            <property name="reportLevel"
+                      value="25" />
         </properties>
     </rule>
     <!-- Default threshold is a bit high for some of our classes -->
     <rule ref="category/java/design.xml/CyclomaticComplexity">
         <properties>
-            <property name="classReportLevel" value="80"/>
-            <property name="methodReportLevel" value="20"/>
+            <property name="classReportLevel"
+                      value="80" />
+            <property name="methodReportLevel"
+                      value="20" />
         </properties>
     </rule>
     <!-- Default threshold is a bit high for some of our classes -->
     <rule ref="category/java/design.xml/NcssCount">
         <properties>
-            <property name="methodReportLevel" value="70"/>
-            <property name="classReportLevel" value="1500"/>
-            <property name="ncssOptions" value=""/>
+            <property name="methodReportLevel"
+                      value="70" />
+            <property name="classReportLevel"
+                      value="1500" />
+            <property name="ncssOptions"
+                      value="" />
         </properties>
     </rule>
 
@@ -110,32 +125,38 @@
 
     <rule ref="category/java/errorprone.xml">
         <!-- Don't agree, not worth it -->
-        <exclude name="AvoidDuplicateLiterals"/>
+        <exclude name="AvoidDuplicateLiterals" />
         <!-- Disagree, nicer to have getters with the field name -->
-        <exclude name="AvoidFieldNameMatchingMethodName"/>
+        <exclude name="AvoidFieldNameMatchingMethodName" />
         <!-- TODO: Need to use Timestamp for persistence (possible to remove?) -->
-        <exclude name="ReplaceJavaUtilDate"/>
+        <exclude name="ReplaceJavaUtilDate" />
     </rule>
     <!-- Fine to allow increment/decrement -->
     <rule ref="category/java/errorprone.xml/AssignmentInOperand">
         <properties>
-            <property name="allowIf" value="false" />
-            <property name="allowFor" value="false" />
-            <property name="allowWhile" value="false" />
-            <property name="allowIncrementDecrement" value="true" />
-            <property name="allowDoWhile" value="false" />
-            <property name="allowSwitch" value="false" />
+            <property name="allowIf"
+                      value="false" />
+            <property name="allowFor"
+                      value="false" />
+            <property name="allowWhile"
+                      value="false" />
+            <property name="allowIncrementDecrement"
+                      value="true" />
+            <property name="allowDoWhile"
+                      value="false" />
+            <property name="allowSwitch"
+                      value="false" />
         </properties>
     </rule>
 
     <rule ref="category/java/multithreading.xml">
         <!-- Need to interrupt the thread when catching an InterruptedException -->
-        <exclude name="DoNotUseThreads"/>
+        <exclude name="DoNotUseThreads" />
         <!-- Not necessary, see https://github.com/pmd/pmd/issues/2926 for discussion -->
-        <exclude name="UseConcurrentHashMap"/>
+        <exclude name="UseConcurrentHashMap" />
     </rule>
 
-    <rule ref="category/java/performance.xml"/>
+    <rule ref="category/java/performance.xml" />
 
-    <rule ref="category/java/security.xml"/>
+    <rule ref="category/java/security.xml" />
 </ruleset>
