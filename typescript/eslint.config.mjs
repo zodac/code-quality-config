@@ -61,6 +61,7 @@ export default [
                 {
                     selector: "variableLike",
                     format: ["camelCase", "PascalCase", "UPPER_CASE"],
+                    leadingUnderscore: "allow",
                 },
                 // Types and Interfaces
                 {
