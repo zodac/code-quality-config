@@ -14,7 +14,7 @@ fi
 # Temporary files
 tmp_commits=$(mktemp)
 tmp_output=$(mktemp)
-echo "${commit_messages}" >"${tmp_commits}"
+printf "%s\n" "${commit_messages}" >"${tmp_commits}"
 
 # Extract commit info and categorize
 commit_hash=""
@@ -23,7 +23,7 @@ categories_tmp=$(mktemp)
 
 while IFS= read -r line || [ -n "${line}" ]; do
     if [ "${line}" = "---END---" ]; then
-        printf "%s\n" "${commit_message}" | while IFS= read -r msg_line || [ -n "${msg_line}" ]; do
+        printf "%s" "${commit_message}" | while IFS= read -r msg_line || [ -n "${msg_line}" ]; do
             case "${msg_line}" in
                 \[*\]*)
                     category=$(printf "%s" "${msg_line}" | sed -n 's/^\[\([A-Za-z0-9_.-]*\)\] .*/\1/p')
@@ -35,11 +35,11 @@ while IFS= read -r line || [ -n "${line}" ]; do
             esac
         done
         commit_hash=""
-        commit_message=""
+        commit_message="";
         elif [ -z "${commit_hash}" ]; then
         commit_hash="${line}"
     else
-        commit_message="${commit_message}${line}\n"
+        commit_message="${commit_message}$(printf '%s\n' "${line}")"
     fi
 done <"${tmp_commits}"
 
@@ -62,7 +62,7 @@ categories_sorted=$(awk -F'|' '{print $1}' "${categories_tmp}" | sort -u)
 # Output changelog content for GitHub Actions
 {
     echo "changelog_content<<EOF"
-    cat "$tmp_output"
+    cat "${tmp_output}"
     echo "EOF"
 } >>"${GITHUB_ENV}"
 
