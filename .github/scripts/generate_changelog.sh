@@ -35,7 +35,7 @@ while IFS= read -r line || [ -n "${line}" ]; do
             esac
         done
         commit_hash=""
-        commit_message="";
+        commit_message=""
         elif [ -z "${commit_hash}" ]; then
         commit_hash="${line}"
     else

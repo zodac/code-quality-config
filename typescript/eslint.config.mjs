@@ -14,6 +14,7 @@ export default [
         languageOptions: {
             globals: {
                 ...globals.mocha,
+                ...globals.node,
             },
             parser: tsParser,
             parserOptions: {
