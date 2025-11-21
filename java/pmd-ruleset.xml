@@ -75,8 +75,6 @@
     </rule>
 
     <rule ref="category/java/design.xml">
-        <!-- Disagree, useful to explicitly catch generic Exceptions in some scenarios -->
-        <exclude name="AvoidCatchingGenericException" />
         <!-- A little hit & miss -->
         <exclude name="GodClass" />
         <!-- I like chaining methods -->
@@ -124,6 +122,8 @@
     <!-- <rule ref="category/java/documentation.xml"/> -->
 
     <rule ref="category/java/errorprone.xml">
+        <!-- Disagree, useful to explicitly catch generic Exceptions in some scenarios -->
+        <exclude name="AvoidCatchingGenericException" />
         <!-- Don't agree, not worth it -->
         <exclude name="AvoidDuplicateLiterals" />
         <!-- Disagree, nicer to have getters with the field name -->
