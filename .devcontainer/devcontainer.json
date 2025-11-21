@@ -73,7 +73,8 @@
                     "editor.formatOnSave": true,
                     "eslint.packageManager": "npm",
                     "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
-                    "eslint.workingDirectories": [{ "mode": "auto" }]
+                    "eslint.workingDirectories": [{ "mode": "auto" }],
+                    "typescript.format.semicolons": "remove"
                 },
                 "[xml]": {
                     "editor.defaultFormatter": "redhat.vscode-xml",
@@ -122,7 +123,8 @@
         "source=${localEnv:USERPROFILE}/.bash_history,target=/root/.bash_history,type=bind,consistency=cached",
         "source=${localEnv:USERPROFILE}/.gitconfig,target=/root/.gitconfig,type=bind,consistency=cached",
         "source=${localEnv:USERPROFILE}/.ssh,target=/root/.ssh,type=bind,consistency=cached",
-        "source=${localWorkspaceFolder},target=/workspace,type=bind"
+        "source=${localWorkspaceFolder},target=/workspace,type=bind",
+        "source=vscode-history,target=/root/.vscode-server/data/User,type=volume"
     ],
     "postCreateCommand": "chmod +x .devcontainer/scripts/start.sh && .devcontainer/scripts/start.sh",
     "remoteUser": "root",

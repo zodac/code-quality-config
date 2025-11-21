@@ -1,8 +1,8 @@
 // @ts-nocheck
-import typescriptEslint from "@typescript-eslint/eslint-plugin";
-import tsParser from "@typescript-eslint/parser";
-import eslintJs from "@eslint/js";
-import globals from "globals";
+import typescriptEslint from "@typescript-eslint/eslint-plugin"
+import tsParser from "@typescript-eslint/parser"
+import eslintJs from "@eslint/js"
+import globals from "globals"
 
 export default [
     // Apply ESLint's recommended base JS rules first
@@ -23,7 +23,6 @@ export default [
                 project: true,
             },
         },
-
 
         plugins: {
             "@typescript-eslint": typescriptEslint,
@@ -125,4 +124,4 @@ export default [
             "eol-last": ["error", "always"],
         },
     },
-];
+]
