@@ -35,7 +35,7 @@ export default [
             "curly": ["error", "all"],
             "eqeqeq": ["error", "always"],
             "no-throw-literal": "error",
-            "semi": ["error", "always"],
+            "semi": ["error", "never"],
             "quotes": ["error", "double", { avoidEscape: true }],
             "comma-dangle": ["error", "always-multiline"],
             "no-console": ["warn", { allow: ["warn", "error"] }],
