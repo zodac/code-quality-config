@@ -38,8 +38,8 @@
         <exclude name="EmptyMethodInAbstractClassShouldBeAbstract" />
         <!-- Plenty of scenarios where we would like to exit a method early in error cases -->
         <exclude name="OnlyOneReturn" />
-        <!-- False positives in test code, see https://github.com/pmd/pmd/issues/4712 -->
-        <exclude name="UnnecessaryImport" />
+        <!-- False positives when multiplying 2 ints to result in a long -->
+        <exclude name="UnnecessaryCast" />
         <!-- I prefer to be explicit in TRY-WITH-RESOURCES blocks -->
         <!-- Would be nice to keep the check for other cases (interfaces/annotations), but not possible -->
         <!-- Caught by SonarQube analysis -->
@@ -82,6 +82,12 @@
         <!-- Not necessary -->
         <exclude name="LoosePackageCoupling" />
 
+        <!-- Don't care about these rules, conflicts too much with the utility classes -->
+        <exclude name="CognitiveComplexity" />
+        <exclude name="CyclomaticComplexity" />
+        <exclude name="NcssCount" />
+        <exclude name="NPathComplexity" />
+
         <!-- Issues for a style guide -->
         <exclude name="CouplingBetweenObjects" />
         <exclude name="ExcessiveImports" />
@@ -89,33 +95,6 @@
         <exclude name="TooManyMethods" />
         <exclude name="UseObjectForClearerAPI" />
         <exclude name="ExcessivePublicCount" />
-    </rule>
-    <!-- Default threshold is a bit high for some of our validation flows -->
-    <rule ref="category/java/design.xml/CognitiveComplexity">
-        <properties>
-            <property name="reportLevel"
-                      value="25" />
-        </properties>
-    </rule>
-    <!-- Default threshold is a bit high for some of our classes -->
-    <rule ref="category/java/design.xml/CyclomaticComplexity">
-        <properties>
-            <property name="classReportLevel"
-                      value="80" />
-            <property name="methodReportLevel"
-                      value="20" />
-        </properties>
-    </rule>
-    <!-- Default threshold is a bit high for some of our classes -->
-    <rule ref="category/java/design.xml/NcssCount">
-        <properties>
-            <property name="methodReportLevel"
-                      value="70" />
-            <property name="classReportLevel"
-                      value="1500" />
-            <property name="ncssOptions"
-                      value="" />
-        </properties>
     </rule>
 
     <!-- Not checking this rule here, will be handled by Checkstyle -->
@@ -131,21 +110,13 @@
         <!-- TODO: Need to use Timestamp for persistence (possible to remove?) -->
         <exclude name="ReplaceJavaUtilDate" />
     </rule>
-    <!-- Fine to allow increment/decrement -->
-    <rule ref="category/java/errorprone.xml/AssignmentInOperand">
+    <!-- Happy to include 1 as an acceptable magic number -->
+    <rule ref="category/java/errorprone.xml/AvoidLiteralsInIfCondition">
         <properties>
-            <property name="allowIf"
-                      value="false" />
-            <property name="allowFor"
-                      value="false" />
-            <property name="allowWhile"
-                      value="false" />
-            <property name="allowIncrementDecrement"
+            <property name="ignoreMagicNumbers"
+                      value="-1,0,1" />
+            <property name="ignoreExpressions"
                       value="true" />
-            <property name="allowDoWhile"
-                      value="false" />
-            <property name="allowSwitch"
-                      value="false" />
         </properties>
     </rule>
 
@@ -156,7 +127,10 @@
         <exclude name="UseConcurrentHashMap" />
     </rule>
 
-    <rule ref="category/java/performance.xml" />
+    <rule ref="category/java/performance.xml">
+        <!-- False positives when creating mutable ArrayList instances -->
+        <exclude name="AvoidInstantiatingObjectsInLoops" />
+    </rule>
 
     <rule ref="category/java/security.xml" />
 </ruleset>
