@@ -21,8 +21,11 @@
         "code_block_line_length": 200,
         "tables": false
     },
+    "MD028": {
+        "enabled": false
+    },
     "MD033": {
-        "allowed_elements": ["details", "img", "summary"]
+        "allowed_elements": ["details", "img", "summary", "table", "td", "tr"]
     },
     "MD035": {
         "style": "----"
