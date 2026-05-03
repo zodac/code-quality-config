@@ -38,6 +38,12 @@ Contains the configuration files for various code quality tools for different la
 - [spotbugs-include-filter-file.xml](./java/spotbugs-include-filter-file.xml)
 - [spotbugs-exclude-filter-file.xml](./java/spotbugs-exclude-filter-file.xml)
 
+### JavaScript
+
+#### [ESLint](https://eslint.org/docs/latest/rules/)
+
+- [eslint.config.cjs](./javascript/eslint.config.cjs)
+
 ### LICENSE
 
 #### [BSD Zero Clause](https://opensource.org/license/0bsd)
@@ -55,3 +61,9 @@ Contains the configuration files for various code quality tools for different la
 #### [Ruff](https://docs.astral.sh/ruff/rules/)
 
 - [ruff.toml](./python/ruff.toml)
+
+### TypeScript
+
+#### [typescript-esline](https://typescript-eslint.io/rules/)
+
+- [eslint.config.mjs](./typescript/eslint.config.mjs)
