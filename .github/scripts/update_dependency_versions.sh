@@ -109,6 +109,7 @@ update_debian_packages() {
     
     echo "✅ ${dockerfile#./} updated successfully with latest Debian packages"
 }
+
 update_debian_image_version() {
     local dockerfile="${1}"
     
@@ -135,6 +136,42 @@ update_debian_image_version() {
     sed -i "s|DEBIAN_DOCKER_IMAGE_VERSION=\"[0-9.]*\"|DEBIAN_DOCKER_IMAGE_VERSION=\"${latest_version}\"|" "${BASH_SOURCE[0]}"
     
     echo "✅ Debian image updated to ${latest_version} in Dockerfile and script"
+}
+
+get_docker_ce_cli_version() {
+    local codename="${1:-trixie}"
+    local arch="${2:-amd64}"
+    
+    local url="https://download.docker.com/linux/debian/dists/${codename}/stable/binary-${arch}/Packages.gz"
+    
+    # IMPORTANT: send logs to stderr, not stdout
+    echo "🔍 Fetching docker-ce-cli version from Docker APT repo..." >&2
+    
+    curl -fsSL "${url}" \
+    | gunzip -c \
+    | awk '
+            /^Package: docker-ce-cli$/ { in_pkg=1 }
+            in_pkg && /^Version:/ { print $2; exit }
+            /^$/ { in_pkg=0 }
+    '
+}
+
+update_docker_ce_cli() {
+    local dockerfile="${1}"
+    
+    local version
+    version=$(get_docker_ce_cli_version "trixie" | tr -d '\n')
+    
+    echo "  docker-ce-cli=${version}"
+    
+    awk -v ver="${version}" '
+    {
+        if ($0 ~ /docker-ce-cli=/) {
+            sub(/docker-ce-cli="[^"]*"/, "docker-ce-cli=\"" ver "\"")
+        }
+        print
+    }
+    ' "${dockerfile}" > "${dockerfile}.tmp" && mv "${dockerfile}.tmp" "${dockerfile}"
 }
 
 get_github_action_version() {
@@ -208,4 +245,5 @@ fi
 
 update_debian_image_version "${dockerfile}" || echo "⚠️ Debian image version update failed, continuing..."
 update_debian_packages "${dockerfile}"      || echo "⚠️ Debian packages update failed, continuing..."
+update_docker_ce_cli "${dockerfile}"        || echo "⚠️ Docker CE CLI update failed, continuing..."
 update_github_actions                       || echo "⚠️ GitHub Actions update failed, continuing..."
