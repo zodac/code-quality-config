@@ -2,12 +2,12 @@ name: Publish
 
 on:
   push:
-    branches: [master]
+    branches: [ master ]
     paths-ignore:
       - ".devcontainer/**"
       - ".github/workflows/documentation.yml"
       - "README.md"
-  workflow_dispatch: # allows manual trigger
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           fetch-depth: 0 # Needed for pushing tags
 
@@ -58,7 +58,8 @@ jobs:
 
       - name: Generate categorized changelog
         id: changelog
-        run: .github/scripts/generate_changelog.sh "${{ steps.prev_tag.outputs.prev_tag }}"
+        run: .github/scripts/generate_changelog.sh "${{ steps.prev_tag.outputs.prev_tag
+          }}"
 
       - name: Bump patch version in VERSION file
         run: .github/scripts/bump_version.sh "${{ steps.version.outputs.version }}"
@@ -69,7 +70,7 @@ jobs:
 
       - name: Push commit and tag if there were changes
         if: env.has_changes == 'true'
-        uses: ad-m/github-push-action@v0.8.0
+        uses: ad-m/github-push-action@v1.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: master
@@ -77,7 +78,7 @@ jobs:
 
       - name: Create GitHub Release
         if: env.has_changes == 'true'
-        uses: ncipollo/release-action@v1
+        uses: ncipollo/release-action@v1.21.0
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

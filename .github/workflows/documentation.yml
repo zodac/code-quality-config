@@ -2,11 +2,12 @@ name: Documentation
 
 on:
   push:
-    branches: [master]
+    branches: [ master ]
     paths:
       - ".github/workflows/documentation.yml"
       - "markdown/.markdownlint.json"
       - "README.md"
+  workflow_dispatch:
 
 jobs:
   analyze:
@@ -19,11 +20,11 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           fetch-depth: 0
 
-      - uses: DavidAnson/markdownlint-cli2-action@v19.1.0
+      - uses: DavidAnson/markdownlint-cli2-action@v23.1.0
         with:
           config: "markdown/.markdownlint.json"
           globs: "README.md"

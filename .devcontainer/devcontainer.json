@@ -124,7 +124,8 @@
         "source=${localEnv:USERPROFILE}/.gitconfig,target=/root/.gitconfig,type=bind,consistency=cached",
         "source=${localEnv:USERPROFILE}/.ssh,target=/root/.ssh,type=bind,consistency=cached",
         "source=${localWorkspaceFolder},target=/workspace,type=bind",
-        "source=vscode-history,target=/root/.vscode-server/data/User,type=volume"
+        "source=vscode-history,target=/root/.vscode-server/data/User,type=volume",
+        "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
     ],
     "postCreateCommand": "chmod +x .devcontainer/scripts/start.sh && .devcontainer/scripts/start.sh",
     "remoteUser": "root",
