@@ -24,33 +24,41 @@ if [ -d .git ]; then
         exit 0
     fi
     
-    # Determine remote tracking branch
+    # Ensure we have an upstream branch
     remote_branch=$(git rev-parse --abbrev-ref --symbolic-full-name "@{u}" 2>/dev/null)
     if [ -z "${remote_branch}" ]; then
         echo "No remote tracking branch for '${current_branch}', skipping update check"
         exit 0
     fi
     
-    # Compare local vs remote
-    local_hash=$(git rev-parse "${current_branch}")
-    remote_hash=$(git rev-parse "${remote_branch}")
+    # Check if remote has commits not in local
+    behind_count=$(git rev-list --count HEAD..@{u})
     
-    if [ "${local_hash}" != "${remote_hash}" ]; then
-        echo "A new update is available on remote branch '${remote_branch}'"
-        read -rp "Would you like to pull the latest changes? [y/N]: " user_reply
+    if [ "${behind_count}" -gt 0 ]; then
+        echo "Remote has ${behind_count} new commit(s) on '${remote_branch}'"
+        
+        read -rp "Would you like to pull and rebase? [y/N]: " user_reply
         if [[ "${user_reply}" =~ ^[Yy]$ ]]; then
-            echo "Pulling latest changes..."
+            echo "Updating local branch with remote changes..."
             
-            stash_result=$(git stash | xargs)
-            if [[ "${stash_result}" == "No local changes to save" ]]; then
-                echo ">>> $(basename "${PWD}") has no changes to stash - Rebasing <<<"
-                git pull --rebase
-            else
-                echo ">>> $(basename "${PWD}") stashed - Rebasing <<<"
-                git pull --rebase
-                echo ">>> $(basename "${PWD}") rebased - New status <<<"
+            stash_applied=false
+            
+            # Only stash if needed
+            if ! git diff-index --quiet HEAD --; then
+                echo "Stashing local changes..."
+                git stash push -u -m "auto-stash before rebase"
+                stash_applied=true
+            fi
+            
+            echo "Rebasing onto ${remote_branch}..."
+            git pull --rebase
+            
+            if [ "${stash_applied}" = true ]; then
+                echo "Restoring stashed changes..."
                 git stash pop -q
             fi
+            
+            echo "Update complete."
         fi
     else
         echo "Your branch '${current_branch}' is up-to-date with remote"
