@@ -41,8 +41,7 @@
         <property name="fileExtensions"
                   value="java, xml" />
         <property name="max"
-                  value="150" />
-        <!-- Changed from 100 -->
+                  value="150" /> <!-- Changed from 100 -->
         <property name="ignorePattern"
                   value="^package.*|^import.*|a href|href|http://|https://|ftp://" />
     </module>
@@ -402,8 +401,7 @@
         </module>
         <module name="MissingJavadocMethod">
             <property name="scope"
-                      value="package" />
-            <!-- Includes: public, protected, package -->
+                      value="package" /> <!-- Includes: public, protected, package -->
             <property name="allowedAnnotations"
                       value="AfterAll, AfterEach, BeforeAll, BeforeEach, Disabled, Override, ParameterizedTest, Test" />
             <property name="allowMissingPropertyJavadoc"
