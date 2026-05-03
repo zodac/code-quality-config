@@ -1,0 +1,31 @@
+module.exports = [
+  {
+    languageOptions: {
+      ecmaVersion: 2020,
+      sourceType: 'script',
+    },
+    rules: {
+      'curly': ['error', 'all'],
+      'dot-notation': 'error',
+      'eqeqeq': ['error', 'always'],
+      'no-cond-assign': ['error', 'except-parens'],
+      'no-console': 'error',
+      'no-else-return': 'error',
+      'no-eval': 'error',
+      'no-implied-eval': 'error',
+      'no-loop-func': 'error',
+      'no-new-func': 'error',
+      'no-param-reassign': 'error',
+      'no-shadow': 'error',
+      'no-throw-literal': 'error',
+      'no-unused-expressions': 'error',
+      'no-useless-return': 'error',
+      'no-var': 'error',
+      'prefer-const': 'error',
+      'prefer-template': 'error',
+      'quotes': ['error', 'single'],
+      'semi': ['error', 'never'],
+      'yoda': ['error', 'never'],
+    },
+  },
+]
