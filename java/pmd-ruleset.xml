@@ -69,7 +69,7 @@
                       value=".*" />
             <property name="junit4TestPattern"
                       value=".*" />
-            <property name="junit5TestPattern"
+            <property name="junitJupiterTestPattern"
                       value=".*" />
         </properties>
     </rule>
