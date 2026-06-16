@@ -7,5 +7,9 @@
 <suppressions>
     <!-- Ignore generated files -->
     <suppress files="[\\/]gen[\\/]"
-              checks=".*" />
+              checks=".*"/>
+
+    <!-- Integration tests are named *IT by convention, so suppress just that rule for those files -->
+    <suppress files="IT\.java$"
+              checks="AbbreviationAsWordInName"/>
 </suppressions>
