@@ -6,6 +6,7 @@ on:
     paths-ignore:
       - ".devcontainer/**"
       - ".github/workflows/documentation.yml"
+      - ".github/workflows/monthly_version_update.yml"
       - "README.md"
   workflow_dispatch:
 
