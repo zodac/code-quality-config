@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-DEBIAN_DOCKER_IMAGE_VERSION="13.4"
+DEBIAN_DOCKER_IMAGE_VERSION="13.5"
 
 update_debian_packages() {
     dockerfile="${1}"
