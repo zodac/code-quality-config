@@ -38,7 +38,7 @@ export default [
             "semi": ["error", "never"],
             "quotes": ["error", "double", { avoidEscape: true }],
             "comma-dangle": ["error", "always-multiline"],
-            "no-console": ["warn", { allow: ["warn", "error"] }],
+            "no-console": ["error", { allow: ["warn", "error"] }],
             "no-debugger": "error",
             "no-var": "error",
             "prefer-const": "error",
@@ -115,11 +115,11 @@ export default [
             /* =====================
              * Style & Complexity
              * ===================== */
-            "max-lines": ["warn", { max: 300, skipBlankLines: true, skipComments: true }],
+            "max-lines": ["error", { max: 500, skipBlankLines: true, skipComments: true }],
             "max-depth": ["error", 4],
             "max-params": ["error", 5],
             "complexity": ["error", 10],
-            "max-statements": ["warn", 30],
+            "max-statements": ["error", 50],
             "no-trailing-spaces": "error",
             "eol-last": ["error", "always"],
         },
