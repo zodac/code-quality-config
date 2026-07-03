@@ -1,0 +1,26 @@
+name: ShellCheck
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - ".github/workflows/shellcheck.yml"
+      - ".github/scripts/**"
+      - "shellscript/.shellcheckrc"
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    name: Shell Script Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7.0.0
+        with:
+          fetch-depth: 0 # Needed for change detection against the latest tag
+
+      - name: Run ShellCheck
+        run: .github/scripts/lint_and_tests.sh

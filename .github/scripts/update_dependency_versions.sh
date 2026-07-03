@@ -32,6 +32,7 @@ update_debian_packages() {
         ' "${dockerfile}")
         
         # Extract the package names before '=' using regex
+        # shellcheck disable=SC2312  # only the piped-through package list matters, not each stage's exit code
         mapfile -t package_names < <(echo "${package_block}" | grep -oP '^\s*[a-z0-9.+-]+(?==)' | sed 's/^[[:space:]]*//')
         
         if [[ "${#package_names[@]}" -eq 0 ]]; then
@@ -46,7 +47,8 @@ update_debian_packages() {
         # Single container: update apt once, then query all packages together
         versions_raw=$(docker run --rm "debian:${DEBIAN_DOCKER_IMAGE_VERSION}-slim" sh -c \
         "apt-get update -qq -o Acquire::Languages=none 2>/dev/null && apt-cache policy ${package_names[*]}")
-        
+
+        # shellcheck disable=SC2312  # the awk-parsed output is what matters, not the echo/awk exit codes
         while IFS='=' read -r pkg ver; do
             [[ -n "${pkg}" && -n "${ver}" ]] && debian_versions["${pkg}"]="${ver}"
             done < <(echo "${versions_raw}" | awk '
@@ -191,6 +193,30 @@ get_github_action_version() {
     echo "${version}"
 }
 
+update_shellcheck_image() {
+    local script="${1:-.github/scripts/lint_and_tests.sh}"
+
+    if [[ ! -f "${script}" ]]; then
+        echo "⚠️ ${script} not found, skipping shellcheck update"
+        return 0
+    fi
+
+    echo
+    echo "🔍 Fetching latest ShellCheck version..."
+
+    # ShellCheck's Docker tags mirror its GitHub release tags (e.g. v0.11.0)
+    local version
+    # shellcheck disable=SC2310  # failure is handled explicitly with an early return
+    if ! version=$(get_github_action_version "koalaman/shellcheck"); then
+        return 1
+    fi
+
+    echo "  koalaman/shellcheck=${version}"
+    sed -i "s|SHELLCHECK_DOCKER_IMAGE=\"koalaman/shellcheck:[^\"]*\"|SHELLCHECK_DOCKER_IMAGE=\"koalaman/shellcheck:${version}\"|" "${script}"
+
+    echo "✅ ShellCheck image updated to ${version} in ${script}"
+}
+
 update_github_actions() {
     local workflows_dir=".github/workflows"
     
@@ -203,6 +229,7 @@ update_github_actions() {
     echo "🔍 Fetching latest GitHub Action versions..."
     
     # Collect unique 'owner/repo@version' references from all workflow files
+    # shellcheck disable=SC2312  # only the collected, sorted references matter, not each pipe stage's exit code
     mapfile -t action_refs < <(
         grep -rh 'uses:' "${workflows_dir}"/*.yml \
         | grep -oP 'uses:\s+\K[a-zA-Z0-9._-]+/[a-zA-Z0-9._-]+@\S+' \
@@ -217,7 +244,8 @@ update_github_actions() {
     for ref in "${action_refs[@]}"; do
         action="${ref%@*}"
         current_version="${ref#*@}"
-        
+
+        # shellcheck disable=SC2310  # a failed lookup is handled by skipping this action
         if ! latest_version=$(get_github_action_version "${action}"); then
             continue
         fi
@@ -235,6 +263,17 @@ update_github_actions() {
     echo "✅ ${workflows_dir} updated successfully with latest GitHub Actions"
 }
 
+# Runs an updater step, logging a warning but continuing if it fails so a single failed source
+# doesn't abort the rest of the version bump. Invoking via "${@}" (rather than the function name
+# directly in an || chain) keeps the intended failure tolerance without tripping SC2310.
+run_update() {
+    local description="${1}"
+    shift
+    if ! "${@}"; then
+        echo "⚠️ ${description} failed, continuing..."
+    fi
+}
+
 # Default paths assume the script is being run from the root of the project
 dockerfile="${1:-./.devcontainer/Dockerfile}"
 
@@ -243,7 +282,8 @@ if [[ ! -f "${dockerfile}" ]]; then
     exit 1
 fi
 
-update_debian_image_version "${dockerfile}" || echo "⚠️ Debian image version update failed, continuing..."
-update_debian_packages "${dockerfile}"      || echo "⚠️ Debian packages update failed, continuing..."
-update_docker_ce_cli "${dockerfile}"        || echo "⚠️ Docker CE CLI update failed, continuing..."
-update_github_actions                       || echo "⚠️ GitHub Actions update failed, continuing..."
+run_update "Debian image version update" update_debian_image_version "${dockerfile}"
+run_update "Debian packages update"       update_debian_packages "${dockerfile}"
+run_update "Docker CE CLI update"         update_docker_ce_cli "${dockerfile}"
+run_update "ShellCheck image update"      update_shellcheck_image
+run_update "GitHub Actions update"        update_github_actions

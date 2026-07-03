@@ -1,0 +1,52 @@
+# ------------------------------------------------------------------------------
+# ShellCheck configuration — https://www.shellcheck.net
+#
+# ShellCheck has no `--config <path>` flag (unlike hadolint/eslint/markdownlint):
+# it auto-discovers a `.shellcheckrc` by walking up from each checked file, so
+# this MUST live at the repo root to apply. The `shellcheck` step in
+# .github/scripts/lint_and_tests.sh picks it up automatically (repo mounted at
+# the container's working dir).
+#
+# This is the STRICT baseline: every optional check is turned on. Relax by
+# commenting out an `enable=` line below, or silence a single site inline with
+# `# shellcheck disable=SCxxxx  # reason`. Keep this file in sync with the shared
+# code-quality-config copy.
+# ------------------------------------------------------------------------------
+
+# ── Severity ──────────────────────────────────────────────────────────────────
+# Report everything down to the lowest (style) level; never hide findings.
+severity=style
+
+# ── Sourcing ──────────────────────────────────────────────────────────────────
+# Follow `source`/`.` directives into other files, and resolve relative source
+# paths against the sourcing script's own directory (so shared helpers are
+# checked instead of emitting SC1091 "file not found").
+external-sources=true
+source-path=SCRIPTDIR
+
+# ── Optional checks (all on) ─────────────────────────────────────────────────
+# The default rule set omits these; each line opts one in. See
+# `shellcheck --list-optional`. Comment a line out to drop that rule.
+
+# Suggest adding a default `*)` case in `case` statements.
+enable=add-default-case
+# Suggest removing unnecessary comparison negations (`[ ! "$v" -eq 1 ]`).
+enable=avoid-negated-conditions
+# Require an explicit `-n` in `[ "$var" ]` tests.
+enable=avoid-nullary-conditions
+# Flag additional places where a command's exit code is silently masked.
+enable=check-extra-masked-returns
+# Warn when `set -e` is suppressed by a function call in a compound command.
+enable=check-set-e-suppressed
+# Warn when an uppercase variable is referenced but never assigned.
+enable=check-unassigned-uppercase
+# Prefer `command -v` over the non-portable `which`.
+enable=deprecate-which
+# Suggest quoting variables even when they hold no metacharacters.
+enable=quote-safe-variables
+# Require `[[ … ]]` and warn on `[ … ]` in bash/ksh.
+enable=require-double-brackets
+# Require braces around every variable reference (`${var}`).
+enable=require-variable-braces
+# Flag Useless Use Of Cat (`cat foo | grep bar`).
+enable=useless-use-of-cat

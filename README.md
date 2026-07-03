@@ -62,8 +62,14 @@ Contains the configuration files for various code quality tools for different la
 
 - [ruff.toml](./python/ruff.toml)
 
+### Shellscript
+
+#### [Shellcheck](https://www.shellcheck.net/)
+
+- [.shellcheckrc](./shellscript/.shellcheckrc)
+
 ### TypeScript
 
-#### [typescript-esline](https://typescript-eslint.io/rules/)
+#### [typescript-eslint](https://typescript-eslint.io/rules/)
 
 - [eslint.config.mjs](./typescript/eslint.config.mjs)

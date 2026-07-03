@@ -1,6 +1,7 @@
 #!/bin/sh
 set -eu
 
+# shellcheck disable=SC2154  # GITHUB_SERVER_URL and GITHUB_REPOSITORY are injected by the GitHub Actions runner
 GIT_REPO_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
 previous_git_tag="${1:-}"
 
@@ -32,6 +33,7 @@ while IFS= read -r line || [ -n "${line}" ]; do
                         printf "%s|%s|%s\n" "${category}" "${commit_hash}" "${message}" >>"${categories_tmp}"
                     fi
                 ;;
+                *) ;;  # non-categorised line, ignore
             esac
         done
         commit_hash=""
@@ -60,6 +62,7 @@ categories_sorted=$(awk -F'|' '{print $1}' "${categories_tmp}" | sort -u)
 } >>"${tmp_output}"
 
 # Output changelog content for GitHub Actions
+# shellcheck disable=SC2154  # GITHUB_ENV is injected by the GitHub Actions runner
 {
     echo "changelog_content<<EOF"
     cat "${tmp_output}"

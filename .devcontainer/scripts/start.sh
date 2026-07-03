@@ -11,7 +11,7 @@ chmod 700 /root/.ssh && chmod 600 /root/.ssh/*
 git config --local http.sslBackend gnutl
 
 # Check if there is an update to the repo
-if [ -d .git ]; then
+if [[ -d .git ]]; then
     echo "Checking for updates from the remote git repo..."
     
     # Fetch remote info quietly
@@ -19,22 +19,22 @@ if [ -d .git ]; then
     
     # Determine current branch
     current_branch=$(git symbolic-ref --short HEAD 2>/dev/null)
-    if [ -z "${current_branch}" ]; then
+    if [[ -z "${current_branch}" ]]; then
         echo "No active branch detected, skipping update check"
         exit 0
     fi
     
     # Ensure we have an upstream branch
     remote_branch=$(git rev-parse --abbrev-ref --symbolic-full-name "@{u}" 2>/dev/null)
-    if [ -z "${remote_branch}" ]; then
+    if [[ -z "${remote_branch}" ]]; then
         echo "No remote tracking branch for '${current_branch}', skipping update check"
         exit 0
     fi
     
     # Check if remote has commits not in local
-    behind_count=$(git rev-list --count HEAD..@{u})
+    behind_count=$(git rev-list --count "HEAD..@{u}")
     
-    if [ "${behind_count}" -gt 0 ]; then
+    if [[ "${behind_count}" -gt 0 ]]; then
         echo "Remote has ${behind_count} new commit(s) on '${remote_branch}'"
         
         read -rp "Would you like to pull and rebase? [y/N]: " user_reply
@@ -53,7 +53,7 @@ if [ -d .git ]; then
             echo "Rebasing onto ${remote_branch}..."
             git pull --rebase
             
-            if [ "${stash_applied}" = true ]; then
+            if [[ "${stash_applied}" == true ]]; then
                 echo "Restoring stashed changes..."
                 git stash pop -q
             fi
