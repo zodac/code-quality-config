@@ -11,6 +11,7 @@ ALLOWED_CATEGORIES=(
     "License"
     "Markdown"
     "Python"
+    "Shellscript"
     "TypeScript"
 )
 
