@@ -14,6 +14,10 @@ Contains the configuration files for various code quality tools for different la
 
 ### Docker
 
+#### [Grype](https://github.com/anchore/grype)
+
+- [.grype.yaml](./docker/.grype.yaml)
+
 #### [Hadolint](https://github.com/hadolint/hadolint)
 
 - [.hadolint.yaml](./docker/.hadolint.yaml)
