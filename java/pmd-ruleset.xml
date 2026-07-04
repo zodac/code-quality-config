@@ -114,7 +114,7 @@
     <rule ref="category/java/errorprone.xml/AvoidLiteralsInIfCondition">
         <properties>
             <property name="ignoreMagicNumbers"
-                      value="-1,0,1" />
+                      value="-1,0,0.0,1" />
             <property name="ignoreExpressions"
                       value="true" />
         </properties>

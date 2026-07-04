@@ -1,4 +1,4 @@
-# grype configuration
+# grype configuration, full definition available at https://oss.anchore.com/docs/reference/grype/configuration/
 check-for-app-update: "false"
 fail-on-severity: "high"
 ignore-wontfix: "wont-fix"
