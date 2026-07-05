@@ -13,5 +13,5 @@ label-schema:
   git-revision: hash
   license: spdx
   version: semver
-no-fail: true
+no-fail: false
 strict-labels: false
