@@ -310,6 +310,8 @@
                       value="4" />
             <property name="lineWrappingIndentation"
                       value="4" />
+            <property name="forceStrictCondition"
+                      value="true" />
             <property name="arrayInitIndent"
                       value="4" />
         </module>
