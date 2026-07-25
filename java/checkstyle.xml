@@ -134,6 +134,10 @@
                             VARIABLE_DEF, RECORD_DEF, COMPACT_CTOR_DEF" />
         </module>
         <module name="FallThrough" />
+        <module name="FinalParameters">
+            <property name="tokens"
+                      value="METHOD_DEF, CTOR_DEF, LITERAL_CATCH" />
+        </module>
         <module name="GenericWhitespace">
             <message key="ws.followed"
                      value="GenericWhitespace ''{0}'' is followed by whitespace." />
