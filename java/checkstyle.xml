@@ -135,8 +135,10 @@
         </module>
         <module name="FallThrough" />
         <module name="FinalParameters">
+            <property name="ignorePrimitiveTypes" value="false"/>
+            <property name="ignoreUnnamedParameters" value="false"/>
             <property name="tokens"
-                      value="METHOD_DEF, CTOR_DEF, LITERAL_CATCH" />
+                      value="METHOD_DEF, CTOR_DEF, LITERAL_CATCH, FOR_EACH_CLAUSE, PATTERN_VARIABLE_DEF" />
         </module>
         <module name="GenericWhitespace">
             <message key="ws.followed"
