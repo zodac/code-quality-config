@@ -1,4 +1,4 @@
-FROM debian:13.5-slim
+FROM debian:13.6-slim
 WORKDIR /workspace
 
 # Install development packages
@@ -6,7 +6,7 @@ WORKDIR /workspace
 RUN apt-get update && \
     apt-get install -yqq --no-install-recommends \
         ca-certificates="20250419" \
-        curl="8.14.1-2+deb13u3" \
+        curl="8.14.1-2+deb13u4" \
         git="1:2.47.3-0+deb13u1" \
         gnupg="2.4.7-21+deb13u1" \
         iputils-ping="3:20240905-3" \
