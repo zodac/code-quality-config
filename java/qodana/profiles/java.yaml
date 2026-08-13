@@ -1,6 +1,10 @@
 # Java-focused Qodana profile; categories are referenced directly, so no custom groupIds are needed.
-# ALL is scoped to Java sources plus pom.xml; the individual category entries control what is enabled.
-# Individual inspection entries below override category defaults where needed.
+# ALL is scoped to Java SOURCES ONLY (see the `ignore` below); the individual category entries control what
+# is enabled. Individual inspection entries below override category defaults where needed.
+#
+# HOW A PROJECT PICKS THIS UP. Shared config, consumed through the code-quality-config submodule, so the
+# path a consumer writes is code-quality-config/java/qodana/profiles/java.yaml. It MUST be reached by
+# `imports:` in that project's own qodana.yaml
 
 version: "1.0"
 profile:
@@ -93,12 +97,7 @@ profile:
     - inspection: NestedMethodCall
       enabled: false
     - inspection: OptionalContainsCollection
-      # Scoped out where an absent value and an empty one mean different things (a failed decrypt, a capped read, a rejected import member), and in
-      # config/ where SmallRye REQUIRES the wrapper: an optional list property binds only as Optional<List<...>>, because the CollectionConverter
-      # reads the empty string as null and a bare List then fails the boot with SRCFG00040. That is not hypothetical - obeying this rule on
-      # NotesEncryptionConfig.previousKeys() is what stopped the app starting in any deployment with no NOTE_ENCRYPTION_PREVIOUS_KEYS set.
-      ignore: [ 'src/test/**', 'src/main/java/net/zodac/diurnal/config/**', 'src/main/java/net/zodac/diurnal/crypto/**',
-                'src/main/java/net/zodac/diurnal/note/**', 'src/main/java/net/zodac/diurnal/transfer/**' ]
+      ignore: [ 'src/test/**' ]
     - inspection: UnqualifiedFieldAccess
       enabled: false
     - inspection: UnnecessaryFinalOnLocalVariableOrParameter

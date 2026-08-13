@@ -1,8 +1,10 @@
 <!--
   Inspection SETTINGS that the YAML profile cannot express. Enablement, severity and path scoping all stay
-  in .qodana/profiles/java.yaml; this file carries only option VALUES, and only the ones whose type the YAML
-  format has no syntax for. It is copied into .qodana/idea-config and mounted over `/data/project/.idea`
-  with the rest of ../overrides, so the developer's own `.idea/` is never read or written.
+  in the profile beside this directory - code-quality-config/java/qodana/profiles/java.yaml, as a consuming
+  project sees it - and this file carries only option VALUES, and only the ones whose type the YAML format
+  has no syntax for. The gate copies it, with the rest of ../overrides, into the scan's working directory
+  (.qodana/idea-config) and mounts THAT over `/data/project/.idea`, so the developer's own `.idea/` is never
+  read or written.
 
   THE CONTRACT IS THE DIRECTORY AND `myName` - NOT THIS FILE'S NAME. Unlike ../misc.xml, where the filename
   is what the IDE looks up, project inspection settings are found by scanning `.idea/inspectionProfiles/`,

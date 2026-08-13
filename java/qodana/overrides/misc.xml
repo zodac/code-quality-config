@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  The entry points for Qodana's dead-code inspection (`UnusedDeclaration`), kept HERE rather than in
-  `.idea/misc.xml` so the gate does not depend on a gitignored IDE directory. `qodana_prepare` in
-  .github/scripts/lint_and_tests.sh assembles this directory into .qodana/idea-config and mounts THAT over
+  The entry points for Qodana's dead-code inspection (`UnusedDeclaration`), kept HERE - shared config, in
+  the code-quality-config submodule, beside the inspection profile at ../profiles/java.yaml - rather than in
+  `.idea/misc.xml`, so the gate depends on no gitignored IDE directory and on nobody's local setup.
+  `qodana_prepare` in the consuming project's .github/scripts/lint_and_tests.sh copies this directory into
+  that project's scan working dir (.qodana/idea-config) and mounts THAT over
   `/data/project/.idea` inside the scan container, so the developer's own `.idea/` is invisible to the scan
-  and is never read or written.
+  and is never read or written. A consuming project therefore needs the submodule checked out before the
+  scan will run (`git submodule update` with the init flag; the flag cannot be spelled here, as a double
+  hyphen is illegal inside an XML comment and makes this whole file unparseable).
 
   The obvious alternatives both failed. A read-only bind mount of this file over `.idea/misc.xml` fails the
   run outright with "This project contains no modules", because the scan WRITES that path when it sets the
