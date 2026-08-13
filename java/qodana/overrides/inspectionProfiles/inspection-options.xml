@@ -1,0 +1,64 @@
+<!--
+  Inspection SETTINGS that the YAML profile cannot express. Enablement, severity and path scoping all stay
+  in .qodana/profiles/java.yaml; this file carries only option VALUES, and only the ones whose type the YAML
+  format has no syntax for. It is copied into .qodana/idea-config and mounted over `/data/project/.idea`
+  with the rest of ../overrides, so the developer's own `.idea/` is never read or written.
+
+  THE CONTRACT IS THE DIRECTORY AND `myName` - NOT THIS FILE'S NAME. Unlike ../misc.xml, where the filename
+  is what the IDE looks up, project inspection settings are found by scanning `.idea/inspectionProfiles/`,
+  so this file may be called anything. Measured: renamed from `Project_Default.xml` to the current name,
+  the override still applied in full. It does have to be IN that directory, though - measured, moved up to
+  sit beside ../misc.xml it is never read at all, and the findings simply come back. What IS load-bearing
+  besides the directory is the profile name below - `Project Default` is
+  the project profile Qodana resolves, and measured, changing it to anything else drops this file on the
+  floor: the annotations vanish from the effective profile and the findings come back, with no error and no
+  warning. Do not "tidy" `myName` to match the filename.
+
+  WHY IT IS NEEDED. Qodana types the YAML `options:` block as Map<String, String>, so a set-valued option is
+  unreachable from it. Both spellings were measured: a YAML list aborts the run in 9s with
+  "Cannot deserialize value of type java.lang.String from Array value", and a comma-joined string is
+  accepted and then SILENTLY DROPPED - the run completes, the findings stay, and nothing anywhere says why.
+  The reason is structural: a set is serialised as CHILD ELEMENTS (see the shape below), while the YAML
+  block can only produce a `value="..."` attribute, so no separator could ever have worked.
+
+  IT IS NOT THE ENTRY-POINTS LIST. `EntryPointsManager` in ../misc.xml answers "is this declaration
+  reachable", which is what the dead-code family needs. `InterfaceNeverImplemented` asks a different
+  question - "does a concrete class implement this interface" - and a build-time-generated implementation is
+  not in the PSI however reachable the interface is. Measured: `io.smallrye.config.ConfigMapping` has been
+  in that entry-point list all along and the interfaces were reported anyway.
+
+  THE SHAPE IS NOT A STYLE CHOICE. `option` -> `value` -> `item value="..."` is exactly what
+  ExternalizableStringSet.writeSettings emits and readExternal expects (it reads getChildren("item") and
+  each item's "value" attribute). A `<list>`, an `<option value=...>` child or an attribute on `<value>`
+  reads back as the empty set - again silently.
+
+  VERIFY A CHANGE HERE, DO NOT ASSUME IT TOOK. Every failure mode above is quiet, so check the profile the
+  scan actually ran with rather than the finding count alone:
+      grep -c 'io.smallrye.config.ConfigMapping' .qodana/results/log/effective.profile.xml   # 0 = ignored
+  A working override appears once per scope plus once at tool level (20 with the current scope set), and
+  leaves everything else untouched - 811 enabled tools and zero `unused` findings, before and after.
+
+  ONE FILE FOR ALL OF THEM. Only one project profile is ever active, so a second file here would not add a
+  second set of overrides - any future option that the YAML cannot carry belongs in this same profile,
+  alongside the tool below. That is why the file is named for what it holds rather than for one inspection.
+
+  WHAT THE ENTRIES BUY. Every @ConfigMapping interface is implemented by SmallRye at build time, and a
+  @FunctionalInterface by a lambda (or, for GitHubReleasesApi, by the REST client built at runtime), so no
+  concrete implementor exists in the source. Without this, 4 of the 12 config interfaces were reported -
+  and only 4 because the other 9 happen to have test stubs, so deleting a stub would have failed the gate
+  on an interface nobody had touched.
+-->
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="InterfaceNeverImplemented" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignorableAnnotations">
+        <value>
+          <item value="io.smallrye.config.ConfigMapping" />
+          <item value="java.lang.FunctionalInterface" />
+        </value>
+      </option>
+      <option name="ignoreInterfacesThatOnlyDeclareConstants" value="false" />
+    </inspection_tool>
+  </profile>
+</component>

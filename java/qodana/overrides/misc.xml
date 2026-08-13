@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  The entry points for Qodana's dead-code inspection (`UnusedDeclaration`), kept HERE rather than in
+  `.idea/misc.xml` so the gate does not depend on a gitignored IDE directory. `qodana_prepare` in
+  .github/scripts/lint_and_tests.sh assembles this directory into .qodana/idea-config and mounts THAT over
+  `/data/project/.idea` inside the scan container, so the developer's own `.idea/` is invisible to the scan
+  and is never read or written.
+
+  The obvious alternatives both failed. A read-only bind mount of this file over `.idea/misc.xml` fails the
+  run outright with "This project contains no modules", because the scan WRITES that path when it sets the
+  JDK and imports the Maven module. Swapping the file in for the duration of a run and restoring it
+  afterwards works, but for those minutes an open IDE reads a config with no ProjectRootManager in it,
+  drops the project JDK, and writes back a stripped file - so it quietly wrecks the developer's setup.
+
+  WHY IT IS NEEDED. `jetbrains/qodana-jvm-community` is built on IDEA Community, which has no CDI, JAX-RS or
+  Jakarta Persistence plugins - so nothing the framework instantiates is recognised as reachable, and every
+  resource, bean, entity and injected field is reported as unused. Measured on this project: 238 `unused`
+  findings with the four-annotation list this replaced, 0 with the list below. None of the 238 was real dead
+  code. `UnusedDeclaration` is the one inspection this whole step exists for (it is the only check in the
+  gate that sees an unused PUBLIC declaration), so the answer had to be to teach it the entry points rather
+  than to switch it off.
+
+  THE FILENAME IS THE CONTRACT, not a label. Every file in this directory is copied to the same relative
+  path under `.idea/`, and the IDE decides which components to read from a file by that name alone -
+  `EntryPointsManager` is looked for in `misc.xml` and nowhere else. Measured: renaming this file to
+  `entry-points.xml` is not an error and prints no warning, it simply reports 756 problems instead of 470,
+  because nothing here is read at all. Add configuration by adding `overrides/<the .idea filename>`; several
+  unrelated components share one file here exactly as they do in a real `.idea`.
+
+  IT HAS TO BE A COMPLETE ONE. `EntryPointsManager` alone fails the run with "This project contains no
+  modules": there is no `.idea/modules.xml` in this project, so `MavenProjectsManager` below is the only
+  thing that tells the IDE to import the module from the POM, and without it the scan has nothing to
+  inspect. A run can appear to survive without it by reusing module state left in .qodana/cache from an
+  earlier run, and then fail on the very next run once that state is rewritten - so do not trim this file
+  down to the list. `ProjectRootManager` is deliberately NOT here: it pins a project JDK by IDE-local name
+  (`openjdk-26`), which means nothing on a CI checkout - the scan configures its own SDK.
+
+  WHAT EACH ENTRY BUYS. Marking a TYPE only makes the type itself reachable - members are NOT covered - so
+  the JAX-RS verbs are listed alongside `@Path`: without them every `@GET`/`@POST` method (and every DTO
+  built inside one) is still reported. Three declarations remain that no annotation can cover, and they
+  carry an inline `@SuppressWarnings("unused")` naming their real caller instead: `TextOutcome.Failure
+  .field()`, `SessionConfig.cleanupInterval()` and `RegisterRequest`'s Jackson-invoked constructor.
+
+  ADDING TO THE LIST. Keep `list size` in step with the number of items and the indices contiguous from 0 -
+  that is the IDE's own serialisation format. The stale-cache trap that makes an edit here look like it did
+  nothing (the container restores its own cached `.idea` at the start of every run) is handled for you:
+  qodana_prepare drops that cached copy before each scan.
+-->
+<project version="4">
+  <component name="EntryPointsManager">
+    <list size="19">
+      <item index="0" class="java.lang.String" itemvalue="io.quarkus.qute.TemplateExtension" />
+      <item index="1" class="java.lang.String" itemvalue="io.quarkus.scheduler.Scheduled" />
+      <item index="2" class="java.lang.String" itemvalue="io.quarkus.test.junit.QuarkusTest" />
+      <item index="3" class="java.lang.String" itemvalue="io.smallrye.config.ConfigMapping" />
+      <item index="4" class="java.lang.String" itemvalue="jakarta.enterprise.context.ApplicationScoped" />
+      <item index="5" class="java.lang.String" itemvalue="jakarta.inject.Inject" />
+      <item index="6" class="java.lang.String" itemvalue="jakarta.interceptor.Interceptor" />
+      <item index="7" class="java.lang.String" itemvalue="jakarta.persistence.Column" />
+      <item index="8" class="java.lang.String" itemvalue="jakarta.persistence.Entity" />
+      <item index="9" class="java.lang.String" itemvalue="jakarta.persistence.Id" />
+      <item index="10" class="java.lang.String" itemvalue="jakarta.persistence.PreUpdate" />
+      <item index="11" class="java.lang.String" itemvalue="jakarta.ws.rs.DELETE" />
+      <item index="12" class="java.lang.String" itemvalue="jakarta.ws.rs.GET" />
+      <item index="13" class="java.lang.String" itemvalue="jakarta.ws.rs.PATCH" />
+      <item index="14" class="java.lang.String" itemvalue="jakarta.ws.rs.POST" />
+      <item index="15" class="java.lang.String" itemvalue="jakarta.ws.rs.PUT" />
+      <item index="16" class="java.lang.String" itemvalue="jakarta.ws.rs.Path" />
+      <item index="17" class="java.lang.String" itemvalue="jakarta.ws.rs.ext.Provider" />
+      <item index="18" class="java.lang.String" itemvalue="org.jboss.resteasy.reactive.server.ServerExceptionMapper" />
+    </list>
+  </component>
+  <!--
+    THE MODULE MODEL DOES NOT LIVE HERE, and cannot be made to. A Maven project is imported by IntelliJ's
+    external-system integration, which writes the modules into the IDE system directory - for this gate,
+    .qodana/cache/idea/*/projects/*/external_build_system/ - no matter what this file says. Two attempts
+    to change that both failed and are recorded so they are not tried a third time: omitting
+    ExternalStorageConfigurationManager (it defaults to ON, so this achieved nothing) and then setting it
+    explicitly to enabled="false" (external-system storage is a different mechanism, so also nothing).
+
+    The consequence is the one that matters: `.idea` is rebuilt from this file on every run, while the
+    module model persists in the CACHE. When the two disagree the scan dies with "This project contains no
+    modules. Inspection cannot proceed." - and because the bad state is in the cache rather than the code,
+    it survives a git pull, reappears on whichever machine happened to run an older config, and looks
+    intermittent. qodana_prepare therefore drops the cached model before EVERY run - it re-imports in
+    seconds against a warm index, so keeping it saved nothing and only created a way to go stale.
+  -->
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
+      </list>
+    </option>
+  </component>
+</project>

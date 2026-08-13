@@ -1,0 +1,431 @@
+# Java-focused Qodana profile; categories are referenced directly, so no custom groupIds are needed.
+# ALL is scoped to Java sources plus pom.xml; the individual category entries control what is enabled.
+# Individual inspection entries below override category defaults where needed.
+
+version: "1.0"
+profile:
+  inspections:
+
+    - group: ALL
+      # Start with all inspections disabled, then enable the selected categories
+      enabled: false
+      # Restrict Qodana analysis to Java source files
+      ignore: ["*", "**/*", "!**/*.java"]
+
+    # Java categories
+    - group: "category:Java/Abstraction issues"
+      enabled: true
+    - inspection: BooleanParameter
+      enabled: false
+    - inspection: FeatureEnvy
+      enabled: false
+    - inspection: MagicNumber
+      ignore: ['src/test/**']
+    - inspection: PublicMethodNotExposedInInterface
+      enabled: false
+    - inspection: StaticMethodOnlyUsedInOneClass
+      enabled: false
+    - inspection: TypeMayBeWeakened
+      enabled: false
+    - inspection: UseOfConcreteClass
+      enabled: false
+
+    - group: "category:Java/Assignment issues"
+      enabled: true
+
+    - group: "category:Java/Bitwise operation issues"
+      enabled: true
+
+    - group: "category:Java/Class metrics"
+      enabled: true
+    - inspection: AnonymousClassMethodCount
+      enabled: false
+    - inspection: ClassComplexity
+      enabled: false
+    - inspection: ClassCoupling
+      enabled: false
+    - inspection: FieldCount
+      enabled: false
+    - inspection: MethodCount
+      enabled: false
+
+    - group: "category:Java/Class structure"
+      enabled: true
+    - inspection: ConstantDeclaredInAbstractClass
+      ignore: [ 'src/test/**' ]
+    - inspection: FinalClass
+      enabled: false
+    - inspection: InnerClassOnInterface
+      enabled: false
+    - inspection: MarkerInterface
+      enabled: false
+    - inspection: MethodReturnAlwaysConstant
+      enabled: false
+    - inspection: NoopMethodInAbstractClass
+      ignore: [ 'src/test/**' ]
+    - inspection: PublicConstructor
+      enabled: false
+    - inspection: UtilityClass
+      enabled: false
+    - inspection: UtilityClassCanBeEnum
+      enabled: false
+
+    - group: "category:Java/Cloning issues"
+      enabled: true
+
+    - group: "category:Java/Code maturity"
+      enabled: true
+
+    - group: "category:Java/Code style issues"
+      enabled: true
+    - inspection: BoundedWildcard
+      enabled: false
+    - inspection: ChainedMethodCall
+      enabled: false
+    - inspection: ConstantOnWrongSideOfComparison
+      options:
+        myConstantShouldGoLeft: false
+        myIgnoreNull: false
+    - inspection: FieldMayBeFinal
+      ignore: [ 'src/test/**' ]
+    - inspection: ImplicitCallToSuper
+      enabled: false
+    - inspection: NestedMethodCall
+      enabled: false
+    - inspection: OptionalContainsCollection
+      # Scoped out where an absent value and an empty one mean different things (a failed decrypt, a capped read, a rejected import member), and in
+      # config/ where SmallRye REQUIRES the wrapper: an optional list property binds only as Optional<List<...>>, because the CollectionConverter
+      # reads the empty string as null and a bare List then fails the boot with SRCFG00040. That is not hypothetical - obeying this rule on
+      # NotesEncryptionConfig.previousKeys() is what stopped the app starting in any deployment with no NOTE_ENCRYPTION_PREVIOUS_KEYS set.
+      ignore: [ 'src/test/**', 'src/main/java/net/zodac/diurnal/config/**', 'src/main/java/net/zodac/diurnal/crypto/**',
+                'src/main/java/net/zodac/diurnal/note/**', 'src/main/java/net/zodac/diurnal/transfer/**' ]
+    - inspection: UnqualifiedFieldAccess
+      enabled: false
+    - inspection: UnnecessaryFinalOnLocalVariableOrParameter
+      enabled: false
+    - inspection: UnqualifiedMethodAccess
+      enabled: false
+    - inspection: UnnecessarySuperConstructor
+      enabled: false
+    - inspection: UnqualifiedStaticUsage
+      enabled: false
+
+    - group: "category:Java/Compiler issues"
+      enabled: true
+
+    - group: "category:Java/Concurrency annotation issues"
+      enabled: true
+
+    - group: "category:Java/Control flow issues"
+      enabled: true
+    - inspection: BreakStatement
+      enabled: false
+    - inspection: ContinueStatement
+      enabled: false
+    - inspection: IfStatementWithTooManyBranches
+      enabled: false
+    - inspection: OverlyComplexBooleanExpression
+      options:
+        m_limit: 5
+    - inspection: SwitchStatement
+      enabled: false
+    - inspection: SwitchStatementWithTooManyBranches
+      enabled: false
+
+    - group: "category:Java/Data flow"
+      enabled: true
+    - inspection: LawOfDemeter
+      enabled: false
+
+    - group: "category:Java/Declaration redundancy"
+      enabled: true
+    - inspection: CanBeFinal
+      ignore: [ 'src/test/**' ]
+    - inspection: RedundantThrows
+      ignore: [ 'src/test/**' ]
+    - inspection: SameParameterValue
+      ignore: [ 'src/test/**' ]
+    - inspection: SameReturnValue
+      enabled: false
+    - inspection: WeakerAccess
+      enabled: true
+      options:
+        SUGGEST_FOR_CONSTANTS: true
+        SUGGEST_PACKAGE_LOCAL_FOR_MEMBERS: false
+        SUGGEST_PACKAGE_LOCAL_FOR_TOP_CLASSES: false
+        SUGGEST_PRIVATE_FOR_INNERS: false
+
+    - group: "category:Java/Dependency issues"
+      enabled: true
+    - inspection: ClassWithTooManyDependencies
+      enabled: false
+    - inspection: ClassWithTooManyDependents
+      enabled: false
+    - inspection: ClassWithTooManyTransitiveDependencies
+      enabled: false
+    - inspection: ClassWithTooManyTransitiveDependents
+      enabled: false
+    - inspection: CyclicClassDependency
+      enabled: false
+    - inspection: CyclicPackageDependency
+      enabled: false
+
+    - group: "category:Java/Encapsulation"
+      enabled: true
+    - inspection: AssignmentOrReturnOfFieldWithMutableType
+      enabled: false
+    - inspection: PackageVisibleField
+      enabled: false
+    - inspection: PackageVisibleInnerClass
+      enabled: false
+    - inspection: ProtectedInnerClass
+      enabled: false
+    - inspection: PublicInnerClass
+      enabled: false
+    - inspection: UseOfAnotherObjectsPrivateField
+      ignore: [ 'src/test/**' ]
+      options:
+        ignoreSameClass: true
+        ignoreInnerClasses: true
+
+    - group: "category:Java/Error handling"
+      enabled: true
+    - inspection: BadExceptionDeclared
+      ignore: [ 'src/test/**' ]
+    - inspection: BadExceptionThrown
+      ignore: [ 'src/test/**' ]
+    - inspection: TooBroadCatch
+      ignore: ['src/test/**']
+    - inspection: TooBroadThrows
+      ignore: [ 'src/test/**' ]
+
+    - group: "category:Java/Finalization"
+      enabled: true
+
+    - group: "category:Java/Imports"
+      enabled: true
+    - inspection: SingleClassImport
+      enabled: false
+    - inspection: StaticImport
+      enabled: false
+
+    - group: "category:Java/Inheritance issues"
+      enabled: true
+    - inspection: AbstractClassWithoutAbstractMethods
+      ignore: [ 'src/test/**' ]
+
+    - group: "category:Java/Initialization"
+      enabled: true
+    - inspection: InstanceVariableInitialization
+      enabled: false
+
+    # TODO: Enable when i18n is done
+    - group: "category:Java/Internationalization"
+      enabled: false
+
+    - group: "category:Java/JUnit"
+      enabled: true
+
+    - group: "category:Java/Java language level issues"
+      enabled: true
+    - inspection: Annotation
+      enabled: false
+    - inspection: AnnotationClass
+      enabled: false
+    - inspection: EnumClass
+      enabled: false
+    - inspection: ForeachStatement
+      enabled: false
+
+    - group: "category:Java/Java language level migration aids"
+      enabled: true
+    - inspection: ClassCanBeRecord
+      enabled: false
+
+    - group: "category:Java/JavaBeans issues"
+      enabled: true
+    - inspection: ClassWithoutConstructor
+      enabled: false
+    - inspection: ClassWithoutNoArgConstructor
+      enabled: false
+    - inspection: FieldHasSetterButNoGetter
+      ignore: [ 'src/test/**' ]
+    - inspection: SuspiciousGetterSetter
+      enabled: false
+
+    - group: "category:Java/Javadoc"
+      enabled: true
+    - inspection: MissingJavadoc
+      enabled: false
+    - inspection: MissingPackageInfo
+      enabled: false
+    - inspection: UnnecessaryJavaDocLink
+      enabled: false
+
+    - group: "category:Java/Logging"
+      enabled: true
+    - inspection: ClassWithoutLogger
+      enabled: false
+    - inspection: PublicMethodWithoutLogging
+      enabled: false
+
+    - group: "category:Java/Lombok"
+      enabled: true
+
+    - group: "category:Java/Memory"
+      enabled: true
+    - inspection: ZeroLengthArrayInitialization
+      ignore: ['src/test/**']
+
+    - group: "category:Java/Method"
+      enabled: true
+
+    - group: "category:Java/Method metrics"
+      enabled: true
+    - inspection: CyclomaticComplexity
+      enabled: false
+    - inspection: ParametersPerConstructor
+      enabled: false
+    - inspection: ParametersPerMethod
+      enabled: false
+    - inspection: MultipleReturnPointsPerMethod
+      enabled: false
+    - inspection: MethodWithMultipleLoops
+      enabled: false
+    - inspection: OverlyLongLambda
+      ignore: [ 'src/test/**' ]
+    - inspection: ThreeNegationsPerMethod
+      enabled: false
+
+    - group: "category:Java/Modularization issues"
+      enabled: true
+    - inspection: ClassIndependentOfModule
+      enabled: false
+
+    - group: "category:Java/Naming conventions"
+      enabled: true
+    - inspection: BooleanMethodNameMustStartWithQuestion
+      enabled: false
+    - inspection: ClassNamePrefixedWithPackageName
+      enabled: false
+    - inspection: LocalVariableNamingConvention
+      enabled: false
+    - inspection: NonBooleanMethodNameMayNotStartWithQuestion
+      enabled: false
+    - inspection: ParameterNameDiffersFromOverriddenParameter
+      options:
+        m_ignoreOverridesOfLibraryMethods: true
+    - inspection: ParameterNamingConvention
+      enabled: false
+
+    - group: "category:Java/Numeric issues"
+      enabled: true
+    - inspection: CastThatLosesPrecision
+      enabled: false
+    - inspection: ImplicitNumericConversion
+      enabled: false
+
+    - group: "category:Java/Packaging issues"
+      enabled: true
+    - inspection: ClassOnlyUsedInOnePackage
+      enabled: false
+    - inspection: ClassUnconnectedToPackage
+      enabled: false
+    - inspection: DisjointPackage
+      enabled: false
+    - inspection: PackageWithTooFewClasses
+      enabled: false
+    - inspection: PackageWithTooManyClasses
+      enabled: false
+
+    - group: "category:Java/Performance"
+      enabled: true
+    - inspection: ArrayLengthInLoopCondition
+      enabled: false
+    - inspection: AutoBoxing
+      enabled: false
+    - inspection: AutoUnboxing
+      enabled: false
+    - inspection: CheckForOutOfMemoryOnLargeArrayAllocation
+      enabled: false
+    - inspection: CollectionsMustHaveInitialCapacity
+      enabled: false
+    - inspection: InterfaceWithOnlyOneDirectInheritor
+      enabled: false
+    - inspection: MethodCallInLoopCondition
+      enabled: false
+    - inspection: MethodMayBeStatic
+      ignore: [ 'src/test/**' ]
+      options:
+        m_onlyPrivateOrFinal: true
+    - inspection: MultiplyOrDivideByPowerOfTwo
+      enabled: false
+    - inspection: ObjectAllocationInLoop
+      enabled: false
+    - inspection: SingleCharacterStartsWith
+      enabled: false
+    - inspection: StringBufferMustHaveInitialCapacity
+      enabled: false
+
+    - group: "category:Java/Portability"
+      enabled: true
+    - inspection: HardcodedFileSeparators
+      enabled: false
+    - inspection: HardcodedLineSeparators
+      enabled: false
+
+    - group: "category:Java/Probable bugs"
+      enabled: true
+    - inspection: NullableProblems
+      options:
+        REPORT_NULLABILITY_ANNOTATION_ON_LOCALS: false
+    - inspection: ReturnNull
+      ignore: ['src/test/**']
+    - inspection: StaticCallOnSubclass
+      enabled: false
+    - inspection: VariableNotUsedInsideIf
+      enabled: false
+    - inspection: StringConcatenationMissingWhitespace
+      enabled: false
+
+    - group: "category:Java/Properties files"
+      enabled: true
+
+    - group: "category:Java/Reflective access"
+      enabled: true
+
+    - group: "category:Java/Resource management"
+      enabled: true
+
+    - group: "category:Java/Security"
+      enabled: true
+    - inspection: DesignForExtension
+      enabled: false
+
+    - group: "category:Java/Serialization issues"
+      enabled: true
+
+    - group: "category:Java/Test frameworks"
+      enabled: true
+
+    - group: "category:Java/TestNG"
+      enabled: true
+
+    - group: "category:Java/Threading issues"
+      enabled: true
+
+    - group: "category:Java/Verbose or redundant code constructs"
+      enabled: true
+
+    - group: "category:Java/Visibility"
+      enabled: true
+    - inspection: ParameterHidingMemberVariable
+      enabled: false
+
+    - group: "category:Java/toString() issues"
+      enabled: true
+    - inspection: ClassHasNoToStringMethod
+      enabled: false
+
+    - group: "category:RegExp"
+      enabled: true
