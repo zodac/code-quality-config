@@ -218,9 +218,8 @@ profile:
     - inspection: InstanceVariableInitialization
       enabled: false
 
-    # TODO: Enable when i18n is done
     - group: "category:Java/Internationalization"
-      enabled: false
+      enabled: true
 
     - group: "category:Java/JUnit"
       enabled: true
