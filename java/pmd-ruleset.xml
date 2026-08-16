@@ -93,7 +93,6 @@
         <exclude name="ExcessiveImports" />
         <exclude name="ExcessiveParameterList" />
         <exclude name="TooManyMethods" />
-        <exclude name="UseObjectForClearerAPI" />
         <exclude name="ExcessivePublicCount" />
     </rule>
 
