@@ -197,12 +197,6 @@
             <property name="allowNewlineParagraph"
                       value="true" />
         </module>
-        <module name="JavadocStyle">
-            <property name="endOfSentenceFormat"
-                      value="([.:][ \t\n\r\f&lt;])|([.:]$)" />
-            <property name="scope"
-                      value="private" />
-        </module>
         <module name="JavadocTagContinuationIndentation" />
         <module name="LambdaParameterName">
             <message key="name.invalidPattern"
@@ -391,6 +385,7 @@
                       value="METHOD_REF" />
         </module>
         <module name="SingleLineJavadoc" />
+        <module name="SummaryJavadoc" />
         <module name="TypeName">
             <message key="name.invalidPattern"
                      value="Type name ''{0}'' must match pattern ''{1}''." />
