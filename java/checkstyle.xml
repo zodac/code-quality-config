@@ -3,6 +3,13 @@
 <!--
     Checkstyle configuration based on Google Java Style that can be found at:
     https://google.github.io/styleguide/javaguide.html
+
+    Policy: this config is exhaustive by intent - every module Checkstyle ships is enabled unless it
+    contradicts an enabled one (e.g. NoArrayTrailingComma vs ArrayTrailingComma, MethodName vs
+    GoogleMethodName), needs a project-specific pattern or file to do anything (the Regexp*/Header*
+    family, MatchXpath, ImportControl), or states a style this project does not follow. An omission is
+    therefore deliberate; a module reported by `checkstyle:check` after an upgrade is a NEW module, and
+    the question is which of those three buckets it belongs in.
 -->
 
 <module name="Checker">
@@ -20,6 +27,7 @@
                   value="module\-info\.java$" />
     </module>
 
+    <module name="FileLength" />
     <!-- Checks for whitespace                            -->
     <!-- See http://checkstyle.org/config_whitespace.html -->
     <module name="FileTabCharacter">
@@ -27,6 +35,7 @@
                   value="true" />
     </module>
 
+    <module name="LineEnding" />
     <module name="LineLength">
         <property name="fileExtensions"
                   value="java, xml" />
@@ -56,6 +65,7 @@
                       value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, ANNOTATION_DEF, ANNOTATION_FIELD_DEF, PARAMETER_DEF,
                             VARIABLE_DEF, METHOD_DEF, PATTERN_VARIABLE_DEF, RECORD_DEF, RECORD_COMPONENT_DEF" />
         </module>
+        <module name="AnnotatedDeclarationVisibility" />
         <module name="AnnotationLocation">
             <property name="id"
                       value="AnnotationLocationMostCases" />
@@ -70,6 +80,8 @@
             <property name="tokens"
                       value="VARIABLE_DEF" />
         </module>
+        <module name="AnonInnerLength" />
+        <module name="ArrayBracketNoWhitespace" />
         <module name="ArrayTypeStyle" />
         <module name="AtclauseOrder">
             <property name="tagOrder"
@@ -77,6 +89,7 @@
             <property name="target"
                       value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF, VARIABLE_DEF" />
         </module>
+        <module name="AvoidDoubleBraceInitialization" />
         <module name="AvoidEscapedUnicodeCharacters">
             <property name="allowByTailComment"
                       value="true" />
@@ -85,7 +98,9 @@
             <property name="allowNonPrintableEscapes"
                       value="true" />
         </module>
+        <module name="AvoidNestedBlocks" />
         <module name="AvoidStarImport" />
+        <module name="BooleanExpressionComplexity" />
         <module name="CatchParameterName">
             <message key="name.invalidPattern"
                      value="Catch parameter name ''{0}'' must match pattern ''{1}''." />
@@ -102,6 +117,9 @@
             <property name="tokens"
                       value="SINGLE_LINE_COMMENT, BLOCK_COMMENT_BEGIN" />
         </module>
+        <module name="ConstantName" />
+        <module name="ConstructorsDeclarationGrouping" />
+        <module name="CovariantEquals" />
         <module name="CustomImportOrder">
             <property name="customImportOrderRules"
                       value="STATIC###THIRD_PARTY_PACKAGE" />
@@ -112,6 +130,7 @@
             <property name="tokens"
                       value="IMPORT, STATIC_IMPORT, PACKAGE_DEF" />
         </module>
+        <module name="DefaultComesLast" />
         <module name="EmptyCatchBlock">
             <property name="exceptionVariableName"
                       value="^(expected|ignore|_)$" />
@@ -122,6 +141,8 @@
             <property name="tokens"
                       value="LITERAL_TRY, LITERAL_FINALLY, LITERAL_IF, LITERAL_ELSE, LITERAL_SWITCH" />
         </module>
+        <module name="EmptyForInitializerPad" />
+        <module name="EmptyForIteratorPad" />
         <module name="EmptyLineSeparator">
             <property name="allowMultipleEmptyLines"
                       value="false" />
@@ -133,7 +154,14 @@
                       value="PACKAGE_DEF, IMPORT, STATIC_IMPORT, CLASS_DEF, INTERFACE_DEF, ENUM_DEF, STATIC_INIT, INSTANCE_INIT, METHOD_DEF, CTOR_DEF,
                             VARIABLE_DEF, RECORD_DEF, COMPACT_CTOR_DEF" />
         </module>
+        <module name="EmptyStatement" />
+        <module name="EqualsAvoidNull" />
+        <module name="EqualsHashCode" />
+        <module name="ExecutableStatementCount" />
+        <module name="ExplicitInitialization" />
         <module name="FallThrough" />
+        <module name="FinalClass" />
+        <module name="FinalLocalVariable" />
         <module name="FinalParameters">
             <property name="ignorePrimitiveTypes" value="false"/>
             <property name="ignoreUnnamedParameters" value="false"/>
@@ -150,6 +178,14 @@
             <message key="ws.preceded"
                      value="GenericWhitespace ''{0}'' is preceded with whitespace." />
         </module>
+        <module name="GoogleNonConstantFieldName" />
+        <module name="HexLiteralCase" />
+        <module name="HideUtilityClassConstructor" />
+        <module name="IllegalBlockTag" />
+        <module name="IllegalIdentifierName" />
+        <module name="IllegalImport" />
+        <module name="IllegalInstantiation" />
+        <module name="IllegalToken" />
         <module name="IllegalTokenText">
             <property name="format"
                       value="\\u00(09|0(a|A)|0(c|C)|0(d|D)|22|27|5(C|c))|\\(0(10|11|12|14|15|42|47)|134)" />
@@ -158,6 +194,7 @@
             <property name="tokens"
                       value="STRING_LITERAL, CHAR_LITERAL" />
         </module>
+        <module name="IllegalType" />
         <module name="Indentation">
             <property name="arrayInitIndent"
                       value="4" />
@@ -174,6 +211,8 @@
             <property name="throwsIndent"
                       value="4" />
         </module>
+        <module name="InnerAssignment" />
+        <module name="InterfaceIsType" />
         <module name="InterfaceTypeParameterName">
             <message key="name.invalidPattern"
                      value="Interface type name ''{0}'' must match pattern ''{1}''." />
@@ -181,6 +220,9 @@
                       value="(^[A-Z][0-9]?)$|([A-Z][a-zA-Z0-9]*[T]$)" />
         </module>
         <module name="InvalidJavadocPosition" />
+        <module name="JavaNCSS" />
+        <module name="JavadocBlockTagLocation" />
+        <module name="JavadocContentLocation" />
         <module name="JavadocMethod">
             <property name="accessModifiers"
                       value="public" />
@@ -193,6 +235,8 @@
             <property name="tokens"
                       value="METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF, COMPACT_CTOR_DEF" />
         </module>
+        <module name="JavadocMissingLeadingAsterisk" />
+        <module name="JavadocMissingWhitespaceAfterAsterisk" />
         <module name="JavadocParagraph">
             <property name="allowNewlineParagraph"
                       value="true" />
@@ -211,6 +255,7 @@
                             LITERAL_FOR, LITERAL_IF, LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_TRY, LITERAL_WHILE,
                             METHOD_DEF, OBJBLOCK, STATIC_INIT, RECORD_DEF, COMPACT_CTOR_DEF" />
         </module>
+        <module name="LocalFinalVariableName" />
         <module name="LocalVariableName">
             <message key="name.invalidPattern"
                      value="Local variable name ''{0}'' must match pattern ''{1}''." />
@@ -223,6 +268,8 @@
             <property name="format"
                       value="^[a-z][a-z0-9][a-zA-Z0-9]*$" />
         </module>
+        <module name="MethodCount" />
+        <module name="MethodLength" />
         <module name="MethodName">
             <message key="name.invalidPattern"
                      value="Method name ''{0}'' must match pattern ''{1}''." />
@@ -240,6 +287,7 @@
             <property name="format"
                       value="(^[A-Z][0-9]?)$|([A-Z][a-zA-Z0-9]*[T]$)" />
         </module>
+        <module name="MissingDeprecated" />
         <module name="MissingJavadocMethod">
             <property name="allowedAnnotations"
                       value="AfterAll, AfterEach, BeforeAll, BeforeEach, Disabled, Override, ParameterizedTest, Test" />
@@ -250,6 +298,7 @@
             <property name="tokens"
                       value="METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF, COMPACT_CTOR_DEF" />
         </module>
+        <module name="MissingJavadocPackage" />
         <module name="MissingJavadocType">
             <property name="excludeScope"
                       value="nothing" />
@@ -258,18 +307,31 @@
             <property name="tokens"
                       value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, RECORD_DEF, ANNOTATION_DEF" />
         </module>
+        <module name="MissingOverride" />
+        <module name="MissingOverrideOnRecordAccessor" />
         <module name="MissingSwitchDefault" />
+        <module name="ModifiedControlVariable" />
         <module name="ModifierOrder" />
+        <module name="MultilineCommentLeadingAsteriskPresence" />
         <module name="MultipleVariableDeclarations" />
+        <module name="MutableException" />
         <module name="NeedBraces">
             <property name="tokens"
                       value="LITERAL_DO, LITERAL_ELSE, LITERAL_FOR, LITERAL_IF, LITERAL_WHILE" />
         </module>
+        <module name="NestedIfDepth" />
+        <module name="NestedTryDepth" />
+        <module name="NoArrayTrailingComma" />
+        <module name="NoClone" />
+        <module name="NoCodeInFile" />
+        <module name="NoEnumTrailingComma" />
         <module name="NoFinalizer" />
         <module name="NoLineWrap">
             <property name="tokens"
                       value="PACKAGE_DEF, IMPORT, STATIC_IMPORT" />
         </module>
+        <module name="NoWhitespaceAfter" />
+        <module name="NoWhitespaceBeforeCaseDefaultColon" />
         <module name="NonEmptyAtclauseDescription" />
         <module name="NoWhitespaceBefore">
             <property name="allowLineBreaks"
@@ -277,8 +339,10 @@
             <property name="tokens"
                       value="COMMA, SEMI, POST_INC, POST_DEC, DOT, LABELED_STAT, METHOD_REF" />
         </module>
+        <module name="NumericalPrefixesInfixesSuffixesCharacterCase" />
         <module name="OneStatementPerLine" />
         <module name="OneTopLevelClass" />
+        <module name="OpenjdkAnnotationLocation" />
         <module name="OperatorWrap">
             <property name="option"
                       value="NL" />
@@ -287,13 +351,17 @@
                             MOD, NOT_EQUAL, PLUS, QUESTION, SL, SR, STAR, METHOD_REF, TYPE_EXTENSION_AND " />
         </module>
         <module name="OuterTypeFilename" />
+        <module name="OuterTypeNumber" />
         <module name="OverloadMethodsDeclarationOrder" />
+        <module name="PackageAnnotation" />
+        <module name="PackageDeclaration" />
         <module name="PackageName">
             <message key="name.invalidPattern"
                      value="Package name ''{0}'' must match pattern ''{1}''." />
             <property name="format"
                       value="^[a-z]+(\.[a-z][a-z0-9]*)*$" />
         </module>
+        <module name="ParameterAssignment" />
         <module name="ParameterName">
             <message key="name.invalidPattern"
                      value="Parameter name ''{0}'' must match pattern ''{1}''." />
@@ -307,6 +375,7 @@
                             LITERAL_SYNCHRONIZED, LITERAL_WHILE, METHOD_CALL, METHOD_DEF, QUESTION,
                             RESOURCE_SPECIFICATION, SUPER_CTOR_CALL, LAMBDA, RECORD_DEF" />
         </module>
+        <module name="PatternVariableAssignment" />
         <module name="PatternVariableName">
             <message key="name.invalidPattern"
                      value="Pattern variable name ''{0}'' must match pattern ''{1}''." />
@@ -325,7 +394,9 @@
             <property name="format"
                       value="(^[A-Z][0-9]?)$|([A-Z][a-zA-Z0-9]*[T]$)" />
         </module>
+        <module name="RedundantImport" />
         <module name="RequireEmptyLineBeforeBlockTagGroup" />
+        <module name="RequireThis" />
         <module name="RightCurly">
             <property name="id"
                       value="RightCurlySame" />
@@ -342,6 +413,7 @@
                       value="CLASS_DEF, METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, STATIC_INIT, INSTANCE_INIT,
                             ANNOTATION_DEF, ENUM_DEF, INTERFACE_DEF, RECORD_DEF, COMPACT_CTOR_DEF" />
         </module>
+        <module name="SealedShouldHavePermitsList" />
         <module name="SeparatorWrap">
             <property name="id"
                       value="SeparatorWrapDot" />
@@ -384,17 +456,37 @@
             <property name="tokens"
                       value="METHOD_REF" />
         </module>
+        <module name="SimplifyBooleanExpression" />
+        <module name="SimplifyBooleanReturn" />
         <module name="SingleLineJavadoc" />
+        <module name="StaticVariableName" />
+        <module name="StringLiteralEquality" />
         <module name="SummaryJavadoc" />
+        <module name="SuperClone" />
+        <module name="SuperFinalize" />
+        <module name="SuppressWarnings" />
+        <module name="ThrowsCount" />
+        <module name="TodoComment" />
         <module name="TypeName">
             <message key="name.invalidPattern"
                      value="Type name ''{0}'' must match pattern ''{1}''." />
             <property name="tokens"
                       value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF,ANNOTATION_DEF, RECORD_DEF" />
         </module>
+        <module name="TypecastParenPad" />
+        <module name="UncommentedMain" />
+        <module name="UnnecessaryNullCheckWithInstanceOf" />
+        <module name="UnnecessarySemicolonAfterOuterTypeDeclaration" />
+        <module name="UnnecessarySemicolonAfterTypeMemberDeclaration" />
+        <module name="UnnecessarySemicolonInEnumeration" />
+        <module name="UnnecessarySemicolonInTryWithResources" />
+        <module name="UnnecessaryTypeArgumentsWithRecordPattern" />
         <module name="UnusedImports" />
+        <module name="UnusedTryResourceShouldBeUnnamed" />
         <module name="UpperEll" />
+        <module name="UseEnhancedSwitch" />
         <module name="VariableDeclarationUsageDistance" />
+        <module name="WhenShouldBeUsed" />
         <module name="WhitespaceAfter">
             <property name="tokens"
                       value="COMMA, SEMI, TYPECAST, LITERAL_IF, LITERAL_ELSE, LITERAL_WHILE, LITERAL_DO, LITERAL_FOR,
@@ -425,5 +517,6 @@
                             MOD_ASSIGN, NOT_EQUAL, PLUS, PLUS_ASSIGN, QUESTION, RCURLY, SL, SLIST, SL_ASSIGN, SR,
                             SR_ASSIGN, STAR, STAR_ASSIGN, LITERAL_ASSERT, TYPE_EXTENSION_AND" />
         </module>
+        <module name="WhitespaceBeforeEmptyBody" />
     </module>
 </module>
