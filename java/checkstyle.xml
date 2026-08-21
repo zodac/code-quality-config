@@ -55,6 +55,28 @@
                   value="${checkstyle.config.path}/checkstyle-suppression.xml" />
     </module>
 
+    <!--
+        Optional, project-specific suppressions, layered ON TOP of the shared file above (both filters apply, so a
+        project adds only its own entries and keeps inheriting the shared ones). Point
+        `checkstyle.project.suppression.file` at a project's file to enable it - parent-pom exposes that as the
+        <checkstyle-project-suppression-file> property - and leave it unset for the filter to do nothing.
+
+        The two properties below are both load-bearing, and neither can be written more obviously than it is:
+          - `optional` is what turns "file not found" into an empty filter instead of a build failure, which is the
+            entire mechanism by which an unset property costs nothing.
+          - `default` is used verbatim when the property is unset: `${...}` is NOT expanded inside a `default`
+            attribute, so it cannot name a real location and is deliberately a path that will not exist. An EMPTY
+            default is not a substitute - it resolves to something Checkstyle then tries to parse, failing the build
+            with "Unable to parse - Content is not allowed in prolog".
+    -->
+    <module name="SuppressionFilter">
+        <property name="file"
+                  value="${checkstyle.project.suppression.file}"
+                  default="no-project-suppression-file" />
+        <property name="optional"
+                  value="true" />
+    </module>
+
     <module name="TreeWalker">
         <module name="AbbreviationAsWordInName">
             <property name="allowedAbbreviationLength"
