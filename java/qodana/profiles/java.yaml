@@ -220,6 +220,17 @@ profile:
 
     - group: "category:Java/Internationalization"
       enabled: true
+    # These five report ordinary literals, concatenation and locale-sensitive String calls rather than a defect in i18n
+    - inspection: CallToSuspiciousStringMethod
+      enabled: false
+    - inspection: DuplicateStringLiteralInspection
+      enabled: false
+    - inspection: HardCodedStringLiteral
+      enabled: false
+    - inspection: MagicCharacter
+      enabled: false
+    - inspection: StringConcatenation
+      enabled: false
 
     - group: "category:Java/JUnit"
       enabled: true
