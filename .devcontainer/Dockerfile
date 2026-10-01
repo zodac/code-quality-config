@@ -1,4 +1,4 @@
-FROM debian:13.6-slim
+FROM debian:13.7-slim
 WORKDIR /workspace
 
 # Install development packages
@@ -6,11 +6,11 @@ WORKDIR /workspace
 RUN apt-get update && \
     apt-get install -yqq --no-install-recommends \
         ca-certificates="20250419" \
-        curl="8.14.1-2+deb13u4" \
+        curl="8.14.1-2+deb13u5" \
         git="1:2.47.3-0+deb13u1" \
         gnupg="2.4.7-21+deb13u1" \
         iputils-ping="3:20240905-3" \
-        jq="1.7.1-6+deb13u3" \
+        jq="1.7.1-6+deb13u4" \
         lsb-release="12.1-1" \
         openssh-client="1:10.0p1-7+deb13u4" \
         python3-dev="3.13.5-1" \
