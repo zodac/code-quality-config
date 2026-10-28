@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Android Lint configuration - https://googlesamples.github.io/android-custom-lint-rules/user-guide.md.html
+
+  A shared baseline, applied as a fallback with `lint { lintConfig = file("<path to this file>") }` in each module (or a
+  convention plugin). A module's own lint.xml still applies first, so per-path exceptions stay in the project.
+
+  Every warning fails lint, rather than piling up unread: fix it, or suppress it where it occurs with a comment saying
+  why.
+-->
+<lint warningsAsErrors="true">
+    <!-- Deprecated and obsolete usages are errors outright, not just warnings made errors. -->
+    <issue id="Deprecated" severity="error" />
+    <issue id="ObsoleteSdkInt" severity="error" />
+
+    <!-- "A newer version exists" checks: each fires the day a library (GradleDependency, and NewerVersionAvailable, which
+         a KMP module's JVM-target lint runs), Gradle, or AGP (AndroidGradlePluginVersion) publishes a release, failing
+         a build that changed nothing. Track new versions with a dependency update job instead. -->
+    <issue id="GradleDependency" severity="ignore" />
+    <issue id="NewerVersionAvailable" severity="ignore" />
+    <issue id="AndroidGradlePluginVersion" severity="ignore" />
+</lint>

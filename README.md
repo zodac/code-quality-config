@@ -6,6 +6,12 @@ Contains the configuration files for various code quality tools for different la
 
 ## Tools
 
+### Android
+
+#### [Android Lint](https://developer.android.com/studio/write/lint)
+
+- [lint.xml](./android/lint.xml)
+
 ### CSS
 
 #### [Stylelint](https://stylelint.io/)
@@ -21,6 +27,12 @@ Contains the configuration files for various code quality tools for different la
 #### [Hadolint](https://github.com/hadolint/hadolint)
 
 - [.hadolint.yaml](./docker/.hadolint.yaml)
+
+### GitHub Actions
+
+#### [actionlint](https://github.com/rhysd/actionlint)
+
+- [actionlint.yaml](./github-actions/actionlint.yaml)
 
 ### Java
 
