@@ -27,7 +27,7 @@ while IFS= read -r line || [ -n "${line}" ]; do
         printf "%s" "${commit_message}" | while IFS= read -r msg_line || [ -n "${msg_line}" ]; do
             case "${msg_line}" in
                 \[*\]*)
-                    category=$(printf "%s" "${msg_line}" | sed -n 's/^\[\([A-Za-z0-9_.-]*\)\] .*/\1/p')
+                    category=$(printf "%s" "${msg_line}" | sed -n 's/^\[\([A-Za-z0-9_. -]*\)\] .*/\1/p')
                     message=$(printf "%s" "${msg_line}" | sed -n 's/^\[[^]]*\] \(.*\)/\1/p')
                     if [ -n "${category}" ]; then
                         printf "%s|%s|%s\n" "${category}" "${commit_hash}" "${message}" >>"${categories_tmp}"
@@ -41,7 +41,8 @@ while IFS= read -r line || [ -n "${line}" ]; do
         elif [ -z "${commit_hash}" ]; then
         commit_hash="${line}"
     else
-        commit_message="${commit_message}$(printf '%s\n' "${line}")"
+        commit_message="${commit_message}${line}
+"
     fi
 done <"${tmp_commits}"
 
@@ -50,7 +51,8 @@ categories_sorted=$(awk -F'|' '{print $1}' "${categories_tmp}" | sort -u)
 
 # Build changelog
 {
-    for cat in ${categories_sorted}; do
+    printf "%s\n" "${categories_sorted}" | while IFS= read -r cat; do
+        [ -n "${cat}" ] || continue
         echo "**[${cat}]**"
         awk -F'|' -v cat="${cat}" -v repo="${GIT_REPO_URL}" '
         $1 == cat {
