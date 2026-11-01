@@ -5,8 +5,8 @@ WORKDIR /workspace
 # BEGIN DEBIAN PACKAGES
 RUN apt-get update && \
     apt-get install -yqq --no-install-recommends \
-        ca-certificates="20250419" \
-        curl="8.14.1-2+deb13u5" \
+        ca-certificates="20250419+deb13u1" \
+        curl="8.14.1-2+deb13u7" \
         git="1:2.47.3-0+deb13u1" \
         gnupg="2.4.7-21+deb13u1" \
         iputils-ping="3:20240905-3" \
