@@ -1,4 +1,9 @@
 <FindBugsFilter>
+    <!-- False positives, caught better by error-prone and PMD -->
+    <Match>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+
     <!-- Lombok-generated issues -->
     <Match>
         <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
