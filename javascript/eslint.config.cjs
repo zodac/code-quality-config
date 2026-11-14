@@ -28,4 +28,11 @@ module.exports = [
       'yoda': ['error', 'never'],
     },
   },
+  // ES modules are marked by the .mjs extension (as in Node), so plain .js files stay classic scripts
+  {
+    files: ['**/*.mjs'],
+    languageOptions: {
+      sourceType: 'module',
+    },
+  },
 ]
